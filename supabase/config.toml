@@ -1,0 +1,7 @@
+project_id = "oqrmzibxambkjnatreep"
+
+[functions.categorize-transactions]
+verify_jwt = false
+
+[functions.open-finance-webhook]
+verify_jwt = false

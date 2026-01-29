@@ -1,0 +1,1394 @@
+{
+  "common": {
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "create": "Criar",
+    "confirm": "Confirmar",
+    "close": "Fechar",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "filters": "Filtros",
+    "loading": "Carregando...",
+    "noData": "Nenhum dado encontrado",
+    "actions": "Ações",
+    "yes": "Sim",
+    "no": "Não",
+    "all": "Todos",
+    "none": "Nenhum",
+    "back": "Voltar",
+    "next": "Próximo",
+    "previous": "Anterior",
+    "signOut": "Sair",
+    "required": "Obrigatório",
+    "optional": "Opcional",
+    "loadMore": "Carregar mais",
+    "remaining": "{{count}} restantes",
+    "seeByAccount": "Ver por conta",
+    "setAsPrimary": "Definir como principal",
+    "primary": "Principal",
+    "noCategory": "Sem categoria",
+    "transaction": "Transação",
+    "internalMovement": "Movimentação interna",
+    "emailHidden": "E-mail oculto",
+    "used": "usado",
+    "setRecurrence": "Definir recorrência",
+    "recurrent": "Recorrente",
+    "noSubcategories": "Nenhuma subcategoria",
+    "subcategoriesCount": "{{count}} subcategorias",
+    "excludedFromBudget": "Fora do orçamento",
+    "excludeFromBudgetDesc": "Gastos desta categoria não entrarão no orçamento",
+    "days_one": "{{count}} dia",
+    "days_other": "{{count}} dias",
+    "cta": {
+      "view_transactions": "Ver transações",
+      "view_transaction": "Ver transação"
+    },
+    "viewTransactions": "Ver transações",
+    "viewTransaction": "Ver transação",
+    "viewDetails": "Ver detalhes",
+    "viewPending": "Ver pendentes",
+    "copied": "Copiado!",
+    "expand": "Expandir",
+    "collapse": "Recolher",
+    "refresh": "Atualizar",
+    "error": "Erro ao processar",
+    "visible": "Visível",
+    "hidden": "Oculto",
+    "noResults": "Nenhum resultado encontrado",
+    "comingSoon": "Em breve"
+  },
+  "trash": {
+    "emptyTrash": "Esvaziar Lixeira",
+    "confirmTitle": "Excluir permanentemente?",
+    "confirmDescription": "Esta ação irá remover {{count}} transações canceladas permanentemente. Esta ação não pode ser desfeita.",
+    "deleteSuccess": "Lixeira esvaziada com sucesso!",
+    "deleteError": "Erro ao esvaziar lixeira",
+    "deletePermanently": "Excluir permanentemente"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "transactions": "Transações",
+    "budget": "Orçamento",
+    "accounts": "Contas",
+    "creditCards": "Cartões",
+    "categories": "Categorias",
+    "members": "Membros",
+    "notifications": "Notificações",
+    "appName": "Locus Finanças",
+    "add": "Adicionar",
+    "profile": "Perfil",
+    "settings": "Configurações",
+    "menu": "Menu"
+  },
+  "settings": {
+    "title": "Configurações",
+    "description": "Gerencie suas preferências e configurações da conta",
+    "profile": "Perfil",
+    "memberSince": "Membro desde o início",
+    "preferences": "Preferências",
+    "language": "Idioma",
+    "theme": "Tema",
+    "connections": "Conexões",
+    "connectionsDescription": "Conecte suas contas bancárias para importação automática"
+  },
+  "auth": {
+    "login": "Entrar",
+    "signup": "Criar conta",
+    "email": "Email",
+    "password": "Senha",
+    "confirmPassword": "Confirmar senha",
+    "name": "Nome",
+    "forgotPassword": "Esqueci a senha",
+    "noAccount": "Não tem conta?",
+    "hasAccount": "Já tem conta?",
+    "createAccount": "Criar conta",
+    "welcomeBack": "Bem-vindo de volta",
+    "createYourAccount": "Crie sua conta",
+    "validation": {
+      "invalidEmail": "Email inválido",
+      "passwordMinLength": "Senha deve ter pelo menos 6 caracteres",
+      "nameMinLength": "Nome deve ter pelo menos 2 caracteres",
+      "passwordsDoNotMatch": "Senhas não conferem"
+    },
+    "success": {
+      "accountCreated": "Conta criada com sucesso!",
+      "loginSuccess": "Login realizado com sucesso!"
+    },
+    "errors": {
+      "invalidCredentials": "Email ou senha inválidos.",
+      "emailNotConfirmed": "Confirme seu email para continuar.",
+      "userExists": "Este email já está cadastrado.",
+      "emailAlreadyInUse": "Este email já está cadastrado.",
+      "emailInvalid": "E-mail inválido.",
+      "passwordWeak": "Senha fraca. Use letras, números e símbolos.",
+      "passwordRules": "Use 8+ caracteres com letras, números e símbolo.",
+      "rateLimit": "Muitas tentativas. Aguarde e tente novamente.",
+      "network": "Falha de conexão. Tente novamente.",
+      "generic": "Não foi possível concluir. Tente novamente."
+    },
+    "continueWithGoogle": "Continuar com Google",
+    "orContinueWith": "ou continue com",
+    "passwordPolicy": "A senha deve ter pelo menos 8 caracteres e incluir letra maiúscula, letra minúscula, número e símbolo.",
+    "passwordLeaked": "Essa senha já apareceu em vazamentos. Escolha uma senha diferente."
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "description": "Visão geral das finanças de {{month}}",
+    "greeting": {
+      "morning": "Bom dia",
+      "afternoon": "Boa tarde",
+      "evening": "Boa noite"
+    },
+    "balanceEvolution": "Evolução do Saldo (30 dias)",
+    "expenseDistribution": "Distribuição de Gastos",
+    "income": "Receitas",
+    "expenses": "Despesas",
+    "confirmedInMonth": "Confirmadas no mês",
+    "balance": "Saldo disponível",
+    "balanceSubtitle": "(Receitas − Despesas) ajustado por Caixinhas",
+    "balanceTooltip": "Saldo do mês considerando transferências para/de Caixinhas. Transferir para Caixinha reduz o saldo disponível.",
+    "monthBalance": "Saldo do Mês",
+    "monthBalanceTooltip": "Resultado líquido apenas das movimentações deste mês: Receitas Realizadas − Despesas Realizadas.",
+    "accumulatedBalanceSubtitle": "Total em todas as contas",
+    "accumulatedBalanceTooltip": "Dinheiro total disponível em todas as contas hoje (Bancos + Carteira + Caixinhas).",
+    "availableBalance": "Saldo Disponível",
+    "availableBalanceTooltip": "Caixa operacional: saldo de todas as contas EXCETO Caixinhas/Reservas. Quanto você tem para gastar hoje sem tocar nas reservas.",
+    "totalAssets": "Patrimônio Acumulado",
+    "totalAssetsSubtitle": "Total em todas as contas (incluindo reservas)",
+    "totalAssetsTooltip": "Liquidez total da família: soma de todas as contas bancárias, carteiras e caixinhas.",
+    "closingForecast": "Previsão de Fechamento",
+    "closingForecastTooltip": "Projeção: Saldo Disponível + Receitas Pendentes − Despesas Pendentes até o fim do mês. NÃO inclui reservas.",
+    "reserves": "Reservas (Caixinhas)",
+    "reservesTooltip": "Valores guardados em contas marcadas como 'Caixinha'. Não são contabilizados no Saldo Disponível.",
+    "inReserves": "em reservas",
+    "projectedBalance": "Saldo Previsto",
+    "projectedBalanceTooltip": "Quanto você terá no final do mês se todas as receitas/despesas pendentes forem recebidas/pagas.",
+    "toReceive": "a receber",
+    "toPay": "a pagar",
+    "toPayTooltip": "Somente despesas planned. Reduz ao confirmar pagamento.",
+    "pendingCount": "{{count}} pendência(s)",
+    "noPending": "Nenhuma pendência",
+    "forecast": "Saldo Previsto (Mês)",
+    "forecastSubtitle": "Previsão final considerando pendências",
+    "forecastTooltip": "Projeção do saldo do mês considerando receitas e despesas pendentes.",
+    "forecastBalance": "Saldo previsto (mês)",
+    "forecastBalanceSubtitle": "(Receitas + previstas) − (Despesas + a pagar)",
+    "forecastBalanceTooltip": "Projeção do saldo do mês considerando pendências.",
+    "totalBalance": "Saldo total (acumulado)",
+    "totalBalanceTooltip": "Saldo consolidado atual considerando todas as transações confirmadas, independente do mês.",
+    "totalConfirmed": "Total confirmado em todas as contas",
+    "currentBalance": "Saldo atual",
+    "pendingIncome": "Receitas pendentes",
+    "pendingExpenses": "Despesas pendentes",
+    "projected": "Projetado",
+    "accountsSummary": "{{count}} contas",
+    "atRisk": "em risco",
+    "budgetStatus": {
+      "title": "Orçamento",
+      "ok": "Dentro do orçamento",
+      "warning": "Atenção: próximo do limite",
+      "over": "Orçamento estourado"
+    },
+    "insights": {
+      "title": "Insights do Mês"
+    },
+    "upcomingDue": {
+      "title": "Próximos Vencimentos",
+      "toPay": "a pagar",
+      "billToPay": "Conta a pagar",
+      "due": "Venc",
+      "noBillsInDays": "Nenhuma conta a pagar nos próximos {{days}} dias",
+      "moreBills": "+{{count}} conta(s) a pagar",
+      "totalToPay": "Total a pagar ({{days}} dias)"
+    },
+    "budgetRisk": {
+      "title": "Risco de Estouro",
+      "exceeded": "{{count}} estourado(s)",
+      "attention": "{{count}} em atenção",
+      "noCategoryAtRisk": "Nenhuma categoria em risco de estouro",
+      "budget": "Orçamento",
+      "realized": "Realizado",
+      "pending": "Pendente",
+      "moreCategoriesAlert": "+{{count}} categoria(s) em alerta"
+    },
+    "weekly": {
+      "title": "Gastos nos últimos 7 dias",
+      "totalSpent": "Total gasto",
+      "transactions": "Transações",
+      "topCategory": "Maior categoria"
+    },
+    "topCategories": {
+      "title": "Top Categorias de Despesa",
+      "noExpenses": "Nenhuma despesa registrada este mês"
+    },
+    "recentTransactions": {
+      "title": "Transações Recentes",
+      "noTransactions": "Nenhuma transação registrada"
+    },
+    "radar": {
+      "overdue": "Vencidas",
+      "dueToday": "Vence Hoje",
+      "upcoming7Days": "Próximos 7 Dias",
+      "allClear": "Tudo em dia!",
+      "nothingToday": "Nada vence hoje",
+      "upcomingTooltip": "{{count}} conta(s) vencem nos próximos 7 dias"
+    }
+  },
+  "transactions": {
+    "title": "Transações",
+    "description": "Gerencie suas receitas, despesas e transferências",
+    "new": "Transação",
+    "edit": "Editar transação",
+    "searchPlaceholder": "Ex: Supermercado",
+    "type": "Tipo",
+    "status": "Status",
+    "category": "Categoria",
+    "subcategory": "Subcategoria",
+    "account": "Conta",
+    "fromAccount": "Conta origem",
+    "toAccount": "Conta destino",
+    "amount": "Valor",
+    "date": "Data",
+    "dueDate": "Data de vencimento",
+    "description": "Descrição",
+    "member": "Membro",
+    "expenseType": "Tipo de despesa",
+    "selectCategory": "Selecione uma categoria",
+    "selectSubcategory": "Selecione uma subcategoria",
+    "selectAccount": "Selecione uma conta",
+    "selectMember": "Selecione um membro",
+    "kind": {
+      "income": "Receita",
+      "expense": "Despesa",
+      "transfer": "Transferência",
+      "incomeShort": "Receita",
+      "expenseShort": "Despesa",
+      "transferShort": "Transf."
+    },
+    "today": "Hoje",
+    "statusToggle": "Status",
+    "paidQuestion": "Pago?",
+    "paid": "Pago",
+    "pending": "Pendente",
+    "once": "Única",
+    "recurrence": "Recorrência",
+    "recurringOptions": "Opções de recorrência",
+    "dayOfMonth": "Dia do mês",
+    "endMonth": "Mês final",
+    "optional": "Opcional",
+    "moreDetails": "Mais detalhes",
+    "saveTransaction": "SALVAR",
+    "statusLabels": {
+      "confirmed": "Confirmada",
+      "planned": "Pendente",
+      "cancelled": "Cancelada"
+    },
+    "expenseTypes": {
+      "fixed": "Fixa",
+      "variable": "Variável"
+    },
+    "actions": {
+      "confirm": "Confirmar transação",
+      "confirmAll": "Confirmar todas",
+      "confirmAllIncomes": "Confirmar todas as receitas",
+      "confirmAllExpenses": "Confirmar todas as despesas",
+      "confirmPayment": "Confirmar pagamento",
+      "confirmIncome": "Confirmar recebimento",
+      "cancel": "Cancelar transação",
+      "duplicate": "Duplicar",
+      "createSimilar": "Criar igual",
+      "postpone": "Adiar",
+      "simulate": "Simular"
+    },
+    "recurring": {
+      "title": "Transação Recorrente",
+      "toggle": "Recorrente",
+      "toggleDesc": "Repetir esta transação todo mês",
+      "frequency": "Frequência",
+      "monthly": "Mensal",
+      "startMonth": "Mês inicial",
+      "endMonth": "Mês final (opcional)",
+      "noEnd": "Indefinido",
+      "dayOfMonth": "Dia do mês",
+      "repeatMonthly": "Repetir mensalmente",
+      "advancedOptions": "Opções avançadas",
+      "setEndMonth": "Definir mês final",
+      "messages": {
+        "created": "Transação recorrente criada com sucesso",
+        "createdWithDetails": "Recorrência criada: {{count}} lançamentos ({{start}} → {{end}})",
+        "deleted": "Transação recorrente desativada"
+      },
+      "comingSoon": "Funcionalidade em breve",
+      "create": "Criar recorrência"
+    },
+    "installments": {
+      "title": "Parcelamento",
+      "number": "Parcela {{current}} de {{total}}",
+      "editSingle": "Editar somente esta parcela",
+      "editFuture": "Editar esta e futuras",
+      "deleteSingle": "Excluir somente esta parcela",
+      "deleteFuture": "Excluir esta e futuras",
+      "installmentCount": "Número de parcelas",
+      "firstDueDate": "Vencimento da 1ª parcela",
+      "purchase": "Compra parcelada",
+      "countLabel": "Parcelas",
+      "countPlaceholder": "2 a 24",
+      "total": "Total",
+      "of": "de",
+      "allPendingNote": "Todas as parcelas serão criadas como pendentes"
+    },
+    "filters": {
+      "showCancelled": "Mostrar canceladas",
+      "hideCancelled": "Ocultar canceladas",
+      "clearFilters": "Limpar filtros",
+      "overdueExpenses": "Contas vencidas",
+      "monthPending": "Despesas a pagar",
+      "viewing": "Visualizando",
+      "latePattern": "Padrão de atraso",
+      "moreFilters": "Mais filtros",
+      "filtersTitle": "Filtros",
+      "apply": "Aplicar",
+      "clear": "Limpar"
+    },
+    "sort": {
+      "date": "Data",
+      "category": "Categoria",
+      "description": "Descrição",
+      "type": "Tipo",
+      "dueDate": "Vencimento",
+      "amount": "Valor"
+    },
+    "empty": {
+      "title": "Nenhuma transação encontrada",
+      "description": "Comece adicionando sua primeira transação"
+    },
+    "emptyState": "Nenhuma transação para este período",
+    "messages": {
+      "created": "Transação criada com sucesso",
+      "updated": "Transação atualizada com sucesso",
+      "deleted": "Transação excluída com sucesso",
+      "confirmed": "Transação confirmada",
+      "cancelled": "Transação cancelada",
+      "confirmAllSuccess": "Todas as {{type}} foram confirmadas",
+      "selectCategory": "Selecione uma categoria para despesas.",
+      "selectSubcategory": "Selecione uma subcategoria para despesas.",
+      "enterDueDate": "Informe a data de vencimento para contas a pagar.",
+      "installmentRange": "Número de parcelas deve ser entre 2 e 24.",
+      "enterFirstDueDate": "Informe a data de vencimento da primeira parcela.",
+      "deleteConfirm": "Tem certeza que deseja excluir esta transação?",
+      "futureDateNotAllowed": "Transação confirmada não pode ter data futura."
+    },
+    "pagination": {
+      "showing": "Mostrando {{displayed}} de {{total}}"
+    },
+    "warnings": {
+      "pastMonthShort": "Transação de mês anterior – edição limitada",
+      "confirmedShort": "Transação confirmada – edição limitada",
+      "confirmed": "Esta transação já está confirmada. Alterações podem impactar seus totais."
+    },
+    "form": {
+      "enterDueDate": "Informe a data de vencimento",
+      "enterDate": "Informe a data",
+      "enterAmount": "Informe o valor",
+      "selectCategory": "Selecione uma categoria",
+      "selectSubcategory": "Selecione uma subcategoria",
+      "selectCategoryFirst": "Selecione uma categoria primeiro",
+      "selectAccount": "Selecione uma conta",
+      "selectDestAccount": "Selecione a conta de destino",
+      "descriptionPlaceholder": "Ex: Supermercado"
+    },
+    "suggestion": "Sugestão",
+    "applySuggestion": "Aplicar",
+    "smartSuggestion": "Sugestão Inteligente",
+    "recentDescriptions": "Descrições Recentes",
+    "budgetOverflow": "⚠️ Esse gasto fará você atingir {{percentage}}% do orçamento",
+    "summary": {
+      "balance": "Saldo",
+      "confirmedIncome": "Receitas confirmadas",
+      "confirmedExpenses": "Despesas confirmadas",
+      "plannedIncome": "Receitas planejadas",
+      "plannedExpenses": "Despesas planejadas"
+    },
+    "planned": {
+      "pending": "Ainda não foi pago",
+      "futureIncome": "Receita futura",
+      "futureIncomeDesc": "Marque se o valor ainda será recebido",
+      "fixedExpense": "Despesa fixa a pagar",
+      "fixedExpenseDesc": "Contas fixas ficam pendentes até confirmação"
+    },
+    "monthInOrder": "Mês em dia",
+    "bulkConfirm": {
+      "expenses": "Confirmar {{count}} despesa(s)",
+      "incomes": "Confirmar {{count}} receita(s)",
+      "expensesTitle": "Confirmar todas as despesas planejadas?",
+      "incomesTitle": "Confirmar todas as receitas planejadas?",
+      "expensesDescription": "Isso confirmará todas as {{count}} despesa(s) planejadas do mês.",
+      "incomesDescription": "Isso confirmará todas as {{count}} receita(s) planejadas do mês.",
+      "incomesMessage": "Você está prestes a confirmar todas as receitas planejadas deste mês.",
+      "incomesEffect": "Isso vai marcar as receitas como confirmadas e atualizar os totais do mês.",
+      "expensesMessage": "Você está prestes a confirmar todas as despesas planejadas deste mês.",
+      "expensesEffect": "Isso vai marcar as despesas como confirmadas e atualizar os totais do mês."
+    },
+    "confirmDialog": {
+      "title": "Confirmar transação",
+      "message": "Você está {{action}} {{amount}} em {{category}} na conta {{account}}.",
+      "transferMessage": "Você está transferindo {{amount}} de {{fromAccount}} para {{toAccount}}.",
+      "receiving": "recebendo",
+      "posting": "lançando"
+    }
+  },
+  "budget": {
+    "title": "Orçamento Mensal",
+    "tabs": {
+      "monthly": "Mensal",
+      "recurrences": "Recorrências",
+      "recurrencesTitle": "Recorrências"
+    },
+    "description": "Planejamento de despesas — não representa fluxo de caixa",
+    "planned": "Orçado",
+    "actual": "Realizado",
+    "remaining": "Restante",
+    "overallStatus": "Status Geral",
+    "statusTooltip": "Comparação entre o total orçado e o realizado no mês.",
+    "percentUsed": "{{percent}}% do orçamento usado",
+    "category": "Categoria",
+    "subcategory": "Subcategoria",
+    "amount": "Valor",
+    "budgetCeiling": "Teto para categoria",
+    "subcategoriesSum": "Soma das subcategorias",
+    "exceeds": "Ultrapassa o teto",
+    "expand": "Expandir subcategorias ({{count}})",
+    "collapse": "Recolher subcategorias",
+    "recurring": {
+      "title": "Orçamento Recorrente",
+      "new": "Orçamento recorrente",
+      "newCta": "Orçamento recorrente",
+      "edit": "Editar orçamento recorrente",
+      "startMonth": "Mês inicial",
+      "endMonth": "Mês final (opcional)",
+      "monthly": "Este orçamento se repete mensualmente",
+      "monthlyAmount": "Valor mensal",
+      "createFor": "Criar orçamento recorrente para esta categoria",
+      "createForSubcategory": "Criar orçamento recorrente para esta subcategoria",
+      "deleteConfirm": "Excluir este orçamento recorrente? Os orçamentos mensais já gerados serão mantidos.",
+      "perMonth": "mês",
+      "from": "De",
+      "until": "até",
+      "noEnd": "sem fim",
+      "entireCategory": "Categoria inteira",
+      "enterMonthlyAmount": "Informe o valor mensal",
+      "enterStartMonth": "Informe o mês inicial",
+      "autoGenerateNote": "Os orçamentos serão gerados automaticamente todo mês.",
+      "create": "Criar",
+      "activeTitle": "Orçamentos Recorrentes Ativos",
+      "emptyState": "Nenhuma recorrência cadastrada ainda.",
+      "comingSoon": "Em breve",
+      "delete": {
+        "title": "Excluir recorrência?",
+        "desc": "Isso vai remover a recorrência e limpar os orçamentos gerados.",
+        "b1": "Remove os orçamentos criados automaticamente por esta recorrência.",
+        "b2": "Remove meses que você ajustou e ainda estão vinculados à recorrência.",
+        "b3": "Ação irreversível.",
+        "confirm": "Excluir",
+        "cancel": "Cancelar"
+      },
+      "deleteTitle": "Excluir orçamento recorrente?",
+      "deleteDesc": "Isso remove a recorrência e exclui os orçamentos gerados a partir de {{fromMonth}}.",
+      "deleteWarning": "Meses ajustados manualmente também serão excluídos.",
+      "deleteIrreversible": "Essa ação não pode ser desfeita.",
+      "deleteImpactTitle": "O que vai acontecer",
+      "deleteImpact1": "Remover a recorrência",
+      "deleteImpact2": "Excluir orçamentos mensais gerados (a partir do mês escolhido)",
+      "deleteImpact3": "Excluir também meses ajustados manualmente",
+      "deleteImpact4": "Ação irreversível (sem desfazer)",
+      "deleteFromLabel": "Excluir a partir de",
+      "deleteFromCurrentMonth": "Mês atual",
+      "deleteFromSelectedMonth": "Mês selecionado",
+      "deleteFromAllMonths": "Todos os meses gerados",
+      "deleteAction": "Excluir",
+      "deleted": "Orçamento recorrente excluído com sucesso!"
+    },
+    "empty": {
+      "title": "Nenhum orçamento definido",
+      "description": "Defina orçamentos para controlar seus gastos"
+    },
+    "validation": {
+      "fillRequired": "Preencha todos os campos obrigatórios.",
+      "subcategoryExceedsCeiling": "A soma das subcategorias ultrapassa o orçamento da categoria. Ajuste os valores antes de salvar."
+    },
+    "messages": {
+      "created": "Orçamento criado com sucesso",
+      "updated": "Orçamento atualizado com sucesso",
+      "deleted": "Orçamento excluído com sucesso"
+    }
+  },
+  "accounts": {
+    "title": "Contas",
+    "description": "Gerencie suas contas bancárias, cartões e dinheiro",
+    "new": "+ Conta",
+    "edit": "Editar conta",
+    "name": "Nome",
+    "namePlaceholder": "Ex: Banco Nubank",
+    "type": "Tipo",
+    "initialBalance": "Saldo inicial",
+    "initialBalanceNote": "Será criada uma transação de receita no primeiro dia do mês atual",
+    "currentBalance": "Saldo atual",
+    "isActive": "Conta ativa",
+    "isPrimary": "Conta principal",
+    "isReserve": "Caixinha/Reserva",
+    "isReserveDesc": "Não entra no saldo disponível",
+    "reserve": "Caixinha",
+    "reserves": {
+      "title": "Caixinhas",
+      "description": "Contas de reserva (não entram no saldo disponível)",
+      "empty": "Nenhuma caixinha",
+      "total": "Total em caixinhas"
+    },
+    "types": {
+      "BANK": "Banco",
+      "CARD": "Cartão",
+      "CASH": "Dinheiro"
+    },
+    "sections": {
+      "banks": "Bancos",
+      "cards": "Cartões",
+      "cash": "Dinheiro"
+    },
+    "empty": {
+      "title": "Nenhuma conta",
+      "description": "Adicione suas contas bancárias e cartões"
+    },
+    "messages": {
+      "created": "Conta criada com sucesso",
+      "updated": "Conta atualizada com sucesso",
+      "deleted": "Conta excluída com sucesso",
+      "deleteConfirm": "Tem certeza que deseja excluir esta conta?"
+    },
+    "basedOnTransactions": "Baseado em {{count}} transações",
+    "reconcile": "Recalcular Saldos",
+    "reconcileTooltip": "Sincroniza o saldo da conta com o histórico de transações",
+    "details": "Detalhes",
+    "calculatedBalance": "Saldo calculado",
+    "savedInDb": "Saldo no banco",
+    "savedLabel": "Salvo",
+    "discrepancy": "Divergência",
+    "discrepancyAlert": "Divergência de {{diff}} entre o saldo salvo e o calculado. Use 'Sincronizar Saldo' para corrigir.",
+    "initialBalanceWarning": "Cuidado: alterar este valor recalcula o saldo da conta",
+    "syncBalance": "Sincronizar Saldo",
+    "syncBalanceTooltip": "Recalcula o saldo baseando-se em todas as transações confirmadas.",
+    "syncBalanceConfirm": "Tem certeza? Isso vai recalcular o saldo usando a fórmula: Saldo Inicial + Receitas - Despesas ± Transferências",
+    "viewCalculationDetails": "Ver memória de cálculo",
+    "breakdown": {
+      "income": "Total Receitas Confirmadas",
+      "expense": "Total Despesas Confirmadas",
+      "transfersIn": "Transferências Recebidas",
+      "transfersOut": "Transferências Enviadas",
+      "result": "Resultado Final"
+    }
+  },
+  "categories": {
+    "title": "Categorias",
+    "description": "Organize suas transações por categorias e subcategorias",
+    "new": "Categoria",
+    "edit": "Editar categoria",
+    "name": "Nome",
+    "namePlaceholder": "Ex: Alimentação",
+    "icon": "Ícone",
+    "subcategories": "Subcategorias",
+    "subcategory": "Subcategoria",
+    "newSubcategory": "Subcategoria",
+    "subcategoryPlaceholder": "Ex: Supermercado",
+    "addSubcategory": "Adicionar subcategoria",
+    "excludeFromBudget": "Excluir do orçamento",
+    "isEssential": "Gasto essencial?",
+    "isEssentialDesc": "Marque se este gasto é indispensável para a família (ex: Mercado, Farmácia)",
+    "essential": "Essencial",
+    "empty": {
+      "title": "Nenhuma categoria",
+      "description": "Crie categorias para organizar suas transações"
+    },
+    "messages": {
+      "created": "Categoria criada com sucesso",
+      "updated": "Categoria atualizada com sucesso",
+      "archived": "Categoria arquivada com sucesso",
+      "restored": "Categoria restaurada com sucesso",
+      "subcategoryCreated": "Subcategoria criada com sucesso",
+      "subcategoryArchived": "Subcategoria arquivada com sucesso",
+      "subcategoryRestored": "Subcategoria restaurada com sucesso"
+    },
+    "archived": "Arquivadas",
+    "archivedCount": "{{count}} arquivadas",
+    "showArchived": "Mostrar arquivadas",
+    "hideArchived": "Ocultar arquivadas",
+    "archive": "Arquivar",
+    "restore": "Restaurar",
+    "archiveDialog": {
+      "title": "Arquivar categoria",
+      "titleSubcategory": "Arquivar subcategoria",
+      "description": "O sistema preserva o histórico de transações. Ao invés de excluir, a categoria será arquivada e poderá ser restaurada a qualquer momento.",
+      "descriptionCategory": "Todas as subcategorias desta categoria também serão arquivadas.",
+      "confirm": "Confirmar arquivamento",
+      "cancel": "Cancelar"
+    }
+  },
+  "members": {
+    "title": "Membros",
+    "description": "Gerencie os membros da sua família",
+    "new": "+ Membro",
+    "edit": "Editar membro",
+    "name": "Nome",
+    "namePlaceholder": "Nome do membro",
+    "email": "Email",
+    "emailPlaceholder": "email@exemplo.com",
+    "role": "Função",
+    "roles": {
+      "ADMIN": "Administrador",
+      "MEMBER": "Membro"
+    },
+    "empty": {
+      "title": "Nenhum membro",
+      "description": "Adicione membros da família para organizar as finanças"
+    },
+    "messages": {
+      "created": "Membro adicionado com sucesso",
+      "updated": "Membro atualizado com sucesso",
+      "deleted": "Membro removido com sucesso",
+      "cannotRemoveSelf": "Você não pode remover a si mesmo",
+      "cannotDemoteLastAdmin": "Não é possível rebaixar o último administrador. Promova outro membro antes.",
+      "cannotRemoveLastAdmin": "Não é possível remover o último administrador. Promova outro membro antes.",
+      "deleteConfirm": "Tem certeza que deseja remover este membro?"
+    }
+  },
+  "invites": {
+    "title": "Convidar membro",
+    "desc": "Gere um link de convite para adicionar alguém à família",
+    "invite": "Convidar",
+    "email": "E-mail do convidado",
+    "emailPlaceholder": "exemplo@email.com",
+    "emailRequired": "Informe o e-mail do convidado",
+    "role": "Função",
+    "days": "Validade (dias)",
+    "create": "Gerar link",
+    "createDesc": "Gere um link para convidar alguém para sua família.",
+    "linkLabel": "Link de convite",
+    "copyLink": "Copiar link",
+    "copyToken": "Copiar token",
+    "token": "Token",
+    "link": "Link",
+    "copied": "Copiado!",
+    "expiresAt": "Expira em {{date}}",
+    "shareNote": "Envie este link para o convidado. Ele precisará acessar com o e-mail informado.",
+    "shownOnce": "⚠️ Este token será mostrado apenas uma vez. Copie agora!",
+    "generateAnother": "Gerar outro",
+    "dialog": {
+      "title": "Convidar",
+      "generate": "Gerar convite",
+      "generatedTitle": "Convite gerado",
+      "oneTime": "Este token será mostrado apenas uma vez."
+    },
+    "fields": {
+      "emailOptional": "E-mail (opcional)",
+      "role": "Função",
+      "expires": "Validade"
+    },
+    "preview": {
+      "valid": "Convite válido",
+      "invalid": "Convite inválido ou expirado.",
+      "used": "Este convite já foi usado.",
+      "expired": "Este convite expirou.",
+      "ctaAccept": "Entrar na família",
+      "ctaValidate": "Validar"
+    },
+    "join": {
+      "title": "Entrar na família",
+      "desc": "Você foi convidado para participar de uma família",
+      "name": "Seu nome",
+      "namePlaceholder": "Como quer ser chamado",
+      "nameOptional": "Opcional - será usado o nome do seu cadastro se não informado",
+      "pasteToken": "Cole o token de convite",
+      "tokenPlaceholder": "Token recebido do administrador",
+      "cta": "Aceitar convite",
+      "success": "Convite aceito!",
+      "redirecting": "Redirecionando..."
+    },
+    "inbox": {
+      "title": "Convites pendentes",
+      "desc": "Você tem convites aguardando sua resposta",
+      "inviteTitle": "Convite para família",
+      "roleLabel": "Função",
+      "accept": "Aceitar",
+      "expired": "Expirado",
+      "expiresIn1Day": "Expira em 1 dia",
+      "expiresInDays": "Expira em {{count}} dias"
+    },
+    "errors": {
+      "invalidOrExpired": "Convite inválido ou expirado",
+      "emailMismatch": "Este convite foi enviado para outro e-mail",
+      "alreadyLinked": "Você já está vinculado a uma família",
+      "alreadyInHousehold": "Você já está em uma família.",
+      "notAllowed": "Você precisa estar logado para aceitar o convite",
+      "generic": "Não foi possível processar o convite"
+    }
+  },
+  "notifications": {
+    "title": "Notificações",
+    "description": "Histórico de alertas e ações pendentes",
+    "markAsRead": "Marcar como lida",
+    "markAllAsRead": "Marcar todas como lidas",
+    "archive": "Arquivar",
+    "archiveAll": "Arquivar todas",
+    "dismiss": "Dispensar",
+    "actionRequired": "Ação necessária",
+    "attention": "Atenção",
+    "information": "Informação",
+    "success": "Sucesso",
+    "info": "Info",
+    "urgent": "urgente",
+    "viewHistory": "Ver histórico",
+    "hideHistory": "Ocultar histórico",
+    "viewAll": "Ver todas as notificações",
+    "noNotifications": "Nenhuma notificação",
+    "silenceIsGood": "Silêncio é bom sinal!",
+    "urgentActions": "Há ações financeiras urgentes",
+    "attentionAlerts": "Há alertas que merecem atenção",
+    "informativeUpdates": "Atualizações informativas",
+    "unread": "não lidas",
+    "unread_single": "não lida",
+    "newNotification": "Nova notificação",
+    "emptyState": "Nenhuma notificação pendente",
+    "filters": {
+      "open": "Abertas",
+      "all": "Todas",
+      "unread": "Não lidas",
+      "action": "Ação necessária",
+      "warning": "Atenção",
+      "info": "Informação",
+      "archived": "Arquivadas"
+    },
+    "empty": {
+      "title": "Nenhuma notificação",
+      "openDescription": "Não há notificações pendentes. Silêncio é bom sinal!",
+      "filteredDescription": "Nenhuma notificação encontrada com os filtros selecionados."
+    },
+    "types": {
+      "overduePayment": "Pagamento vencido",
+      "monthAtRisk": "Mês em risco",
+      "coverageRisk": "Risco de cobertura",
+      "budgetWarning": "Alerta de orçamento"
+    },
+    "messages": {
+      "payment_delayed_single": "{{subcategoryName}}{{categoryName}} venceu há {{daysOverdue}} dia(s).",
+      "payment_delayed_multiple": "{{count}} contas vencidas. A mais antiga venceu há {{maxDaysOverdue}} dia(s).",
+      "payment_delayed_title": "Conta vencida",
+      "payment_delayed_title_very": "Conta muito atrasada",
+      "payment_delayed_title_plural": "Contas vencidas",
+      "payment_delayed_title_very_plural": "Contas muito atrasadas",
+      "month_at_risk": "Se todas as contas forem pagas, o mês fecha negativo em {{amount}}.",
+      "month_at_risk_title": "Risco de fechar o mês no vermelho",
+      "month_at_risk_preview": "Se todas as contas pendentes forem pagas, seu saldo ficará negativo neste mês.",
+      "month_at_risk_preview_title": "Risco de fechar o mês no vermelho",
+      "coverage_risk": "{{description}} vence em {{daysUntilDue}} dia(s) e pode ultrapassar seu saldo.",
+      "coverage_risk_title": "Conta pode faltar cobertura",
+      "month_recovered": "Com as últimas ações, o mês voltou a fechar positivo.",
+      "month_recovered_title": "Mês recuperado",
+      "risk_reduced": "Sua ação aumentou sua folga financeira em {{amount}}.",
+      "risk_reduced_title": "Boa decisão",
+      "recurring_late_payment": "Você costuma pagar esta conta após o vencimento.\nDeseja ajustar o vencimento ou criar um lembrete antecipado?",
+      "recurring_late_payment_title": "Conta costuma atrasar",
+      "missing_recurring_expense": "Você costuma ter essa despesa neste mês.\nEla ainda vai acontecer?",
+      "missing_recurring_expense_title": "Despesa recorrente não registrada",
+      "expense_due_today": "{{description}} vence hoje. Valor: {{amount}}",
+      "expense_due_today_title": "Conta vence hoje",
+      "generic": "Notificação"
+    },
+    "payment_delayed": {
+      "single": {
+        "with_subcategory": "{{subcategory}} – {{category}} venceu há {{days}} dia(s).",
+        "with_category": "{{category}} venceu há {{days}} dia(s).",
+        "with_description": "{{description}} venceu há {{days}} dia(s)."
+      },
+      "multiple": "{{count}} contas vencidas. A mais antiga venceu há {{days}} dia(s).",
+      "title": {
+        "overdue": "Conta vencida",
+        "very_overdue": "Conta muito atrasada"
+      },
+      "title_plural": {
+        "overdue": "Contas vencidas",
+        "very_overdue": "Contas muito atrasadas"
+      }
+    },
+    "month_at_risk": {
+      "title": "Risco de fechar o mês no vermelho",
+      "message": "Se todas as contas forem pagas, o mês fecha negativo em {{amount}}.",
+      "preview_message": "Se todas as contas pendentes forem pagas, seu saldo ficará negativo neste mês."
+    },
+    "coverage_risk": {
+      "title": "Conta pode faltar cobertura",
+      "message": "{{description}} vence em {{days}} dia(s) e pode ultrapassar seu saldo."
+    },
+    "month_recovered": {
+      "title": "Mês recuperado",
+      "message": "Com as últimas ações, o mês voltou a fechar positivo."
+    },
+    "risk_reduced": {
+      "title": "Boa decisão",
+      "message": "Sua ação aumentou sua folga financeira em {{amount}}."
+    },
+    "recurring_late_payment": {
+      "title": "Conta costuma atrasar",
+      "message": "Você costuma pagar esta conta após o vencimento.\nDeseja ajustar o vencimento ou criar um lembrete antecipado?"
+    },
+    "missing_recurring_expense": {
+      "title": "Despesa recorrente não registrada",
+      "message": "Você costuma ter essa despesa neste mês.\nEla ainda vai acontecer?"
+    },
+    "simulator": {
+      "title": "Simulador de Notificações",
+      "description": "Teste como as notificações de bancos seriam recebidas e parseadas pelo app",
+      "enableNotifications": "Receber notificações de bancos",
+      "autoParse": "Criar transações automaticamente",
+      "quickTemplates": "Templates rápidos",
+      "customNotification": "Notificação personalizada",
+      "titlePlaceholder": "Título da notificação",
+      "messagePlaceholder": "Mensagem (use {amount} para o valor)",
+      "amountPlaceholder": "Valor (ex: 150,00)",
+      "amountHint": "Use {amount} na mensagem para inserir o valor formatado",
+      "send": "Enviar",
+      "fillFields": "Preencha título e mensagem",
+      "parseAction": "Criar transação",
+      "parsed": "Transação identificada",
+      "transactionCreated": "Uma nova transação foi criada com base nesta notificação"
+    }
+  },
+  "toasts": {
+    "risk_month_negative": {
+      "title": "Risco de fechar no vermelho",
+      "description": "O mês pode fechar negativo em {{amount}}"
+    },
+    "month_recovered": {
+      "title": "🎉 Mês recuperado!",
+      "description": "Com as últimas ações, o mês voltou a fechar positivo."
+    },
+    "good_decision": {
+      "title": "✨ Boa decisão!",
+      "description": "Sua ação aumentou sua folga financeira em {{amount}}."
+    },
+    "risk_reduced": {
+      "title": "Risco reduzido",
+      "description": "Sua ação reduziu o risco financeiro em {{amount}}."
+    }
+  },
+  "insights": {
+    "month_closes_negative": "Se pagar todas as contas, o mês fecha negativo em {{amount}}.",
+    "days_in_red": "O saldo realizado está negativo há {{days}} dia(s).",
+    "postpone_benefit": {
+      "balances": "Adiar \"{{description}}\" ({{amount}}) equilibra o mês.",
+      "reduces": "Adiar \"{{description}}\" ({{amount}}) reduz o déficit para {{deficit}}."
+    },
+    "pending_income_helps": {
+      "balances": "Há {{amount}} em receitas planejadas. Confirmá-las equilibra o mês.",
+      "still_missing": "Há {{amount}} em receitas planejadas. Mas ainda faltarão {{missing}}."
+    },
+    "overdue_payments": "{{count}} conta(s) vencida(s) totalizando {{total}}.",
+    "overdue_payments_one": "{{count}} conta vencida totalizando {{total}}.",
+    "overdue_payments_other": "{{count}} contas vencidas totalizando {{total}}.",
+    "largest_pending_expense": "A maior despesa pendente é \"{{description}}\" ({{amount}}), representando {{percentage}}% do total a pagar.",
+    "action_hint": {
+      "postpone": "Considere adiar ou parcelar esta despesa.",
+      "regularize": "Priorize a regularização dessas contas."
+    }
+  },
+  "errors": {
+    "auth": {
+      "invalid_credentials": "Email ou senha incorretos.",
+      "email_not_confirmed": "Confirme seu email antes de fazer login.",
+      "email_registered": "Este email já está cadastrado.",
+      "signup_disabled": "Cadastro temporariamente indisponível.",
+      "rate_limit": "Muitas tentativas. Aguarde alguns minutos.",
+      "invalid_email": "Email inválido. Verifique o formato.",
+      "password_too_short": "A senha deve ter pelo menos 6 caracteres.",
+      "password_weak": "A senha é muito fraca. Use letras, números e símbolos.",
+      "jwt_expired": "Sua sessão expirou. Faça login novamente."
+    },
+    "business": {
+      "insufficient_balance": "Saldo insuficiente para realizar a transferência."
+    },
+    "fk": {
+      "transactions_account": "Não é possível excluir esta conta porque existem transações vinculadas.",
+      "transactions_category": "Não é possível excluir esta categoria porque existem transações vinculadas.",
+      "transactions_subcategory": "Não é possível excluir esta subcategoria porque existem transações vinculadas.",
+      "transactions_member": "Não é possível excluir este membro porque existem transações vinculadas.",
+      "budgets_category": "Não é possível excluir esta categoria porque existem orçamentos vinculados.",
+      "budgets_subcategory": "Não é possível excluir esta subcategoria porque existem orçamentos vinculados.",
+      "subcategories_category": "Não é possível excluir esta categoria porque existem subcategorias vinculadas.",
+      "generic": "Não é possível excluir porque existem registros vinculados."
+    },
+    "unique": {
+      "budget_exists": "Já existe um orçamento para este mês. Edite o existente.",
+      "generic": "Já existe um registro com esses dados."
+    },
+    "constraint": {
+      "not_null": "Preencha os campos obrigatórios para continuar.",
+      "check": "Os dados informados não são válidos."
+    },
+    "permission": {
+      "rls": "Você não tem permissão para executar esta ação.",
+      "denied": "Você não tem permissão para executar esta ação.",
+      "login_required": "Você precisa estar logado para executar esta ação."
+    },
+    "network": {
+      "connection": "Erro de conexão. Verifique sua internet.",
+      "timeout": "A operação demorou muito. Tente novamente."
+    },
+    "generic": {
+      "no_household": "Você precisa estar em uma residência para continuar.",
+      "unknown": "Não foi possível concluir a ação. Tente novamente."
+    }
+  },
+  "simulation": {
+    "mode": "Modo Simulação",
+    "description": "Você está em modo simulação.",
+    "nothingSaved": "Nada será salvo.",
+    "pendingBillsThisMonth": "Contas pendentes neste mês",
+    "pendingBillsAfter": "Contas pendentes após simulação",
+    "impact": "Impacto",
+    "impactOnToPay": "no A pagar",
+    "gainedBreathingRoom": "Você ganhou fôlego financeiro neste mês ✓",
+    "clearSimulation": "Limpar simulação",
+    "simulatePostponement": "Simular adiamento",
+    "simulateInstallments": "Simular parcelamento",
+    "simulateDeletion": "Simular exclusão",
+    "postponement": {
+      "title": "Simular Adiamento",
+      "description": "Visualize o impacto sem alterar os dados reais",
+      "currentDueDate": "Vencimento atual",
+      "newDueDate": "Novo vencimento (simulado)",
+      "simulateTo": "Simular para",
+      "start": "Iniciar Simulação",
+      "descriptionFormat": "Adiamento de \"{{description}}\" para {{month}}"
+    },
+    "installment": {
+      "title": "Simular Parcelamento",
+      "description": "Visualize o impacto sem alterar os dados reais",
+      "dueDate": "Vencimento",
+      "numberOfInstallments": "Número de parcelas",
+      "amountPerInstallment": "Valor por parcela",
+      "installmentPreview": "Prévia das parcelas",
+      "start": "Iniciar Simulação",
+      "descriptionFormat": "Parcelamento de \"{{description}}\" em {{count}}x de {{amount}}"
+    },
+    "deletion": {
+      "descriptionFormat": "Exclusão de \"{{description}}\" ({{amount}})"
+    }
+  },
+  "filters": {
+    "account": "Conta",
+    "overdueExpenses": "Contas vencidas",
+    "pendingExpenses": "Despesas a pagar",
+    "dueToday": "Vence hoje",
+    "dueThisWeek": "Próximos 7 dias",
+    "viewing": "Visualizando",
+    "latePattern": "Padrão de atraso",
+    "allAccounts": "Todas as contas",
+    "allCategories": "Todas as categorias",
+    "allSubcategories": "Todas as subcategorias"
+  },
+  "stickyFilters": {
+    "filters": "Filtros",
+    "filterTitle": "Filtrar transações",
+    "filterDescription": "Selecione os filtros desejados",
+    "applyFilters": "Aplicar",
+    "clearFilters": "Limpar filtros"
+  },
+  "pagination": {
+    "previous": "Anterior",
+    "next": "Próximo",
+    "goToPrevious": "Ir para página anterior",
+    "goToNext": "Ir para próxima página",
+    "morePages": "Mais páginas"
+  },
+  "status": {
+    "cancelled": "Cancelado",
+    "fixed": "Fixa",
+    "future": "Futura",
+    "toPay": "A pagar",
+    "paid": "Pago",
+    "monthUnderControl": "Mês sob controle ✓",
+    "riskCloseInRed": "Atenção: risco de fechar no vermelho",
+    "noPending": "Nenhuma conta pendente 🎉",
+    "pendingCount": "{{count}} pendência(s)",
+    "budgetExceeded": "Orçamento estourado",
+    "closeToLimit": "Atenção: próximo do limite",
+    "underBudget": "Dentro do orçamento",
+    "percentUsed": "{{percent}}% do orçamento usado",
+    "markAsPaid": "Marcar como pago",
+    "markAsPending": "Marcar como pendente"
+  },
+"settings": {
+    "title": "Configurações",
+    "language": "Idioma",
+    "languages": {
+      "pt-BR": "Português (Brasil)",
+      "es": "Español",
+      "en": "English"
+    },
+    "theme": "Tema",
+    "themes": {
+      "light": "Claro",
+      "dark": "Escuro",
+      "system": "Sistema"
+    },
+    "currency": "Moeda",
+    "dateFormat": "Formato de data"
+  },
+  "projection": {
+    "title": "Projeção de Saldo",
+    "projectedUntil": "Projetado até {{date}}",
+    "projectedBalance": "Saldo previsto",
+    "quickSimulator": "Simulador rápido",
+    "clear": "Limpar",
+    "currentProjected": "Previsto atual",
+    "withSimulation": "Com simulação",
+    "impact": "Impacto",
+    "futureIncome": "Receita futura",
+    "billsToPay": "Contas a pagar",
+    "noDescription": "Sem descrição",
+    "otherItems": "+{{count}} outros itens",
+    "understandVariation": "Entender variação",
+    "suggestionsNoAutoAction": "Sugestões para análise – nenhuma ação automática",
+    "confirmIncome": "Confirmar receita",
+    "evaluatePostponement": "Avaliar adiamento",
+    "dueOn": "Vence em {{date}}",
+    "showVariationDetails": "Ver detalhes da variação",
+    "hideVariationDetails": "Ocultar detalhes",
+    "closeSimulator": "Fechar simulador",
+    "simulateTransaction": "Simular transação",
+    "active": "Ativo",
+    "relevant": "Relevantes",
+    "show": "Mostrar",
+    "accountOf": "{{current}} de {{total}}",
+    "noRelevantAccounts": "Nenhuma conta com movimentação relevante",
+    "noAccounts": "Nenhuma conta encontrada",
+    "totalConsolidated": "Total consolidado",
+    "allAccounts": "Todas as contas",
+    "totalVariation": "Variação total",
+    "totalVariationWithSimulation": "Variação total (com simulação)",
+    "clearSimulation": "Limpar simulação"
+  },
+  "creditCards": {
+    "title": "Cartões de Crédito",
+    "pageTitle": "Cartões de Crédito",
+    "pageDescription": "Gerencie seus cartões de crédito e acompanhe suas faturas",
+    "myCards": "Meus Cartões",
+    "new": "+ Cartão",
+    "edit": "Editar Cartão",
+    "name": "Nome do cartão",
+    "namePlaceholder": "Ex: Nubank, XP, Inter...",
+    "brand": "Bandeira",
+    "selectBrand": "Selecione a bandeira",
+    "limit": "Limite",
+    "closingDay": "Dia de fechamento",
+    "dueDay": "Dia de vencimento",
+    "color": "Cor do cartão",
+    "availableLimit": "Limite disponível",
+    "usedLimit": "Limite usado",
+    "currentInvoice": "Fatura atual",
+    "invoiceMonth": "Fatura de {{month}}",
+    "empty": {
+      "title": "Nenhum cartão cadastrado",
+      "description": "Cadastre seus cartões de crédito para controlar os gastos e faturas."
+    },
+    "deleteConfirm": {
+      "title": "Remover cartão?",
+      "description": "O cartão {{name}} será removido. As transações já lançadas não serão afetadas."
+    },
+    "deleteBlocked": "Não é possível excluir cartão com histórico. Há {{count}} transações vinculadas. Arquive-o ou exclua as transações primeiro.",
+    "paymentMethod": {
+      "label": "Forma de pagamento",
+      "debit": "Débito",
+      "credit_card": "Cartão de crédito",
+      "cash": "Dinheiro",
+      "pix": "Pix",
+      "boleto": "Boleto"
+    },
+    "selectCard": "Selecione o cartão",
+    "invoiceInfo": "Fatura de {{month}}, vence dia {{dueDay}}",
+    "invoiceInfoWithDate": "Vencimento da fatura: {{dueDate}}"
+  },
+  "gamification": {
+    "level": "Nível {{level}}",
+    "totalXp": "{{xp}} XP total",
+    "nextLevel": "Próximo: {{name}}",
+    "progressTo": "Progresso para {{name}}",
+    "streak": "{{days}} dias seguidos",
+    "streakShort": "{{days}} dias",
+    "maxLevel": "Nível máximo alcançado!",
+    "levelUp": "🎉 Subiu para nível {{level}}: {{name}}!",
+    "xpGained": "+{{xp}} XP",
+    "levels": {
+      "beginner": "Iniciante",
+      "organizer": "Organizador",
+      "saver": "Poupador",
+      "investor": "Investidor",
+      "master": "Mestre da Riqueza"
+    }
+  },
+  "audit": {
+    "title": "Auditoria de Pendências",
+    "description": "Lista TODAS as despesas pendentes (ignorando filtros de data) para identificar registros antigos ou incorretos.",
+    "found": "{{count}} transações pendentes encontradas",
+    "noPendingTransactions": "Nenhuma pendência encontrada! ✨",
+    "originalDate": "Data Original",
+    "noDate": "SEM DATA",
+    "invalidDate": "Data inválida",
+    "markAsPaid": "Marcar como pago",
+    "cancel": "Cancelar transação",
+    "markedAsPaid": "Transação marcada como paga!",
+    "transactionCancelled": "Transação cancelada!",
+    "confirmCancel": "Cancelar esta transação?",
+    "confirmCancelDescription": "A transação \"{{description}}\" no valor de {{amount}} será cancelada permanentemente.",
+    "confirmDelete": "Sim, cancelar"
+  },
+  "futureEngine": {
+    "title": "Projeção Inteligente",
+    "syncBadge": "Sincronizado via Open Finance",
+    "estimatedBalance": "Saldo Estimado (Fim do Mês)",
+    "safeZone": "Zona Segura de Gastos",
+    "availableToSpend": "disponível para gastar",
+    "daysRemaining": "{{count}} dias restantes",
+    "daysRemaining_one": "{{count}} dia restante",
+    "breakdown": {
+      "title": "Composição",
+      "fixedExpenses": "Fixas Previstas",
+      "variableAverage": "Variáveis (média)"
+    },
+    "disclaimer": "Baseado nos seus padrões de gastos atuais",
+    "insufficientData": "Dados insuficientes para projeção (mínimo 3 meses)",
+    "risk": {
+      "safe": "Situação confortável",
+      "caution": "Atenção aos gastos",
+      "danger": "Risco de saldo negativo"
+    },
+    "confidence": {
+      "high": "Alta confiança",
+      "highTooltip": "Projeção baseada em 3+ meses de histórico",
+      "medium": "Confiança média",
+      "mediumTooltip": "Projeção com dados parciais",
+      "low": "Dados limitados",
+      "lowTooltip": "Poucos dados para projeção precisa"
+    }
+  },
+  "openFinance": {
+    "wizard": {
+      "title": "Conectar Open Finance",
+      "stepLabel": "Etapa {{current}} de {{total}}",
+      "complete": "Concluído",
+      "error": "Erro"
+    },
+    "benefits": {
+      "title": "Potencialize suas finanças",
+      "subtitle": "Conecte suas contas bancárias para projeções mais precisas e insights personalizados",
+      "projections": {
+        "title": "Projeções Inteligentes",
+        "description": "Previsões de saldo baseadas em dados reais das suas contas"
+      },
+      "insights": {
+        "title": "Insights Personalizados",
+        "description": "Análises automáticas do seu padrão de gastos"
+      },
+      "automation": {
+        "title": "Sincronização Automática",
+        "description": "Transações importadas diariamente sem esforço manual"
+      },
+      "security": {
+        "title": "Segurança Bancária",
+        "description": "Criptografia de ponta e conformidade com LGPD/CDC"
+      },
+      "trustBadge": "Regulado pelo Banco Central do Brasil",
+      "cta": "Entendi, continuar"
+    },
+    "permissions": {
+      "title": "Permissões de Acesso",
+      "subtitle": "Escolha quais dados você deseja compartilhar conosco",
+      "readOnlyBadge": "Somente Leitura",
+      "accounts": {
+        "label": "Contas Bancárias",
+        "description": "Nome e tipo das suas contas"
+      },
+      "balances": {
+        "label": "Saldos",
+        "description": "Saldo atual de cada conta"
+      },
+      "transactions": {
+        "label": "Transações",
+        "description": "Histórico de movimentações"
+      },
+      "creditCards": {
+        "label": "Cartões de Crédito",
+        "description": "Faturas e limites disponíveis"
+      },
+      "investments": {
+        "label": "Investimentos",
+        "description": "Posição em aplicações e rendimentos"
+      },
+      "required": "Obrigatório",
+      "privacyLabel": "Li e aceito a Política de Privacidade e o tratamento dos meus dados",
+      "dataManifesto": "Manifesto de Dados Locus (LGPD/CDC)",
+      "notificationsLabel": "Notificações de sincronização",
+      "notificationsDescription": "Receber alertas quando novos dados forem importados",
+      "cta": "Selecionar banco"
+    },
+    "bankSelection": {
+      "title": "Selecione seu banco",
+      "subtitle": "Escolha a instituição financeira para conectar",
+      "searchPlaceholder": "Buscar banco...",
+      "noResults": "Nenhum banco encontrado",
+      "redirectInfo": "Você será redirecionado para autorizar",
+      "securityNote": "Conexão segura via Open Finance Brasil",
+      "connecting": "Conectando...",
+      "cta": "Conectar banco"
+    },
+    "success": {
+      "title": "Conexão iniciada!",
+      "subtitle": "Estamos aguardando a autorização do seu banco",
+      "syncingStatus": "Aguardando autorização",
+      "nextSteps": {
+        "title": "Próximos passos",
+        "step1": "Seu banco processará a solicitação de conexão",
+        "step2": "Assim que autorizado, seus dados serão sincronizados",
+        "step3": "Suas projeções serão atualizadas automaticamente"
+      },
+      "autoSyncInfo": "Sincronização automática a cada 24 horas",
+      "cta": "Voltar ao Dashboard"
+    },
+    "toast": {
+      "connectionCreated": "Conexão iniciada",
+      "awaitingAuthorization": "Aguardando autorização do banco",
+      "connectionRevoked": "Conexão revogada com sucesso",
+      "error": "Erro na conexão"
+    },
+    "comingSoon": "Em breve"
+  },
+  "fileImport": {
+    "title": "Importar transações",
+    "description": "Importe transações de extratos bancários nos formatos CSV ou OFX.",
+    "processing": "Processando arquivo...",
+    "success": "Arquivo processado com sucesso!",
+    "tryAgain": "Tentar novamente",
+    "dropHere": "Arraste um arquivo aqui",
+    "orClick": "ou clique para selecionar",
+    "selectAccount": "Selecionar conta",
+    "selectAccountDescription": "Escolha a conta onde as transações serão importadas.",
+    "selectAccountPlaceholder": "Selecione uma conta",
+    "transactionsToImport": "transações serão importadas",
+    "importing": "Importando...",
+    "import": "Importar",
+    "mapping": {
+      "title": "Mapear colunas",
+      "subtitle": "Associe as colunas do arquivo aos campos do Locus",
+      "required": "Obrigatórios",
+      "optional": "Opcionais",
+      "date": "Data",
+      "description": "Descrição",
+      "amount": "Valor",
+      "type": "Tipo (C/D)",
+      "category": "Categoria",
+      "selectColumn": "Selecione coluna",
+      "ignore": "Ignorar",
+      "preview": "Prévia das primeiras transações",
+      "confirm": "Confirmar e importar"
+    },
+    "summary": {
+      "successTitle": "Importação concluída!",
+      "partialTitle": "Importação com avisos",
+      "imported": "Importadas",
+      "skipped": "Ignoradas",
+      "errors": "Erros",
+      "errorList": "Detalhes dos erros",
+      "importMore": "Importar outro arquivo"
+    },
+    "errors": {
+      "parseFailed": "Erro ao processar arquivo",
+      "noTransactions": "Nenhuma transação encontrada",
+      "mappingFailed": "Erro ao mapear colunas",
+      "importFailed": "Erro ao importar transações"
+    }
+  },
+  "quickAdd": {
+    "title": "Entrada rápida",
+    "descriptionPlaceholder": "Descrição (Enter para salvar)",
+    "selectAccount": "Conta",
+    "selectCategory": "Categoria (opcional)",
+    "hint": {
+      "tab": "próximo campo",
+      "enter": "salvar"
+    },
+    "success": {
+      "expense": "Despesa registrada!",
+      "income": "Receita registrada!"
+    },
+    "errors": {
+      "invalidAmount": "Valor inválido",
+      "failed": "Erro ao salvar transação"
+    }
+  },
+  "smartImport": {
+    "title": "Importação Inteligente",
+    "uploadDescription": "Arraste seu arquivo CSV ou OFX. A IA irá categorizar automaticamente suas transações.",
+    "reviewDescription": "Revise as categorias sugeridas antes de confirmar a importação.",
+    "importingDescription": "Importando transações para o Locus...",
+    "successDescription": "Todas as transações foram importadas com sucesso!",
+    "dropzone": "Arraste um arquivo aqui ou clique para selecionar",
+    "supportedFormats": "Formatos: CSV, OFX",
+    "noTransactionsFound": "Nenhuma transação encontrada no arquivo",
+    "parseError": "Erro ao processar o arquivo",
+    "transactions": "Transações",
+    "categorized": "Categorizadas",
+    "netPositive": "Saldo positivo",
+    "netNegative": "Saldo negativo",
+    "uncategorized": "Sem categoria",
+    "confirmAll": "Confirmar todas",
+    "importing": "Importando transações",
+    "successTitle": "Importação concluída!",
+    "successMessage": "{{count}} transações foram adicionadas ao Locus.",
+    "learningMessage": "O Locus aprendeu seus padrões! Próxima vez será ainda mais rápido.",
+    "noDefaultAccount": "Nenhuma conta padrão encontrada. Crie uma conta primeiro.",
+    "selectCategory": "Selecionar categoria",
+    "searchCategory": "Buscar categoria...",
+    "confidence": {
+      "high": "Alta confiança",
+      "medium": "Média confiança",
+      "low": "Baixa confiança",
+      "none": "Sugestão manual"
+    }
+  },
+  "onboarding": {
+    "title": "Bem-vindo ao Locus Finanças!",
+    "description": "Para começar, você precisa criar uma família ou entrar em uma existente.",
+    "createHousehold": {
+      "title": "Criar Família",
+      "description": "Crie uma nova família para gerenciar suas finanças.",
+      "nameLabel": "Nome da Família",
+      "namePlaceholder": "Ex: Família Silva",
+      "button": "Criar Família"
+    },
+    "joinHousehold": {
+      "title": "Entrar com Convite",
+      "description": "Aceite um convite para entrar em uma família existente.",
+      "inviteReceived": "Convite recebido",
+      "expiresAt": "Expira em: {{date}}",
+      "accept": "Aceitar",
+      "noInvites": "Você não tem convites pendentes.",
+      "useToken": "Usar token de convite"
+    },
+    "success": {
+      "householdCreated": "Família criada com sucesso!"
+    },
+    "errors": {
+      "nameRequired": "O nome da família é obrigatório",
+      "createFailed": "Erro ao criar família. Tente novamente."
+    }
+  }
+}

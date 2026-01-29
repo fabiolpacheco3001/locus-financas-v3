@@ -1,0 +1,118 @@
+{
+  "common": {
+    "save": "[Šåvé 保存]",
+    "cancel": "[Çåñçél 取消]",
+    "delete": "[Ðélété 删除]",
+    "edit": "[Édít 编辑]",
+    "create": "[Çréåté 创建]",
+    "confirm": "[Çöñfírm 确认]",
+    "close": "[Çlösé 关闭]",
+    "search": "[Šéårçh 搜索]",
+    "filter": "[Fíltér 过滤]",
+    "filters": "[Fíltérs 过滤器]",
+    "loading": "[Löådíñg... 加载中]",
+    "noData": "[Ñö dåtå föüñd 未找到数据]",
+    "actions": "[Åçtíöñs 操作]",
+    "yes": "[Ýés 是]",
+    "no": "[Ñö 否]",
+    "all": "[Åll 全部]",
+    "none": "[Ñöñé 无]",
+    "back": "[Båçk 返回]",
+    "next": "[Ñéxt 下一步]",
+    "previous": "[Prévíöüs 上一步]",
+    "signOut": "[Šígñ öüt 退出]",
+    "required": "[Réqüíréd 必填]",
+    "optional": "[Öptíöñål 可选]",
+    "loadMore": "[Löåd möré 加载更多]"
+  },
+  "nav": {
+    "dashboard": "[Ðåshböård 仪表板]",
+    "transactions": "[Tråñsåçtíöñs 交易]",
+    "budget": "[Büdgét 预算]",
+    "accounts": "[Åççöüñts 账户]",
+    "categories": "[Çåtégöríés 分类]",
+    "members": "[Mémbérs 成员]",
+    "notifications": "[Ñötífíçåtíöñs 通知]",
+    "appName": "[Fåmílý Fíñåñçé 家庭财务]"
+  },
+  "auth": {
+    "login": "[Šígñ íñ 登录]",
+    "signup": "[Šígñ üp 注册]",
+    "email": "[Émåíl 邮箱]",
+    "password": "[Påsswörd 密码]",
+    "confirmPassword": "[Çöñfírm påsswörd 确认密码]",
+    "name": "[Ñåmé 姓名]",
+    "forgotPassword": "[Förgöt påsswörd 忘记密码]",
+    "noAccount": "[Ðöñ't håvé åñ åççöüñt? 没有账户?]",
+    "hasAccount": "[Ålréådý håvé åñ åççöüñt? 已有账户?]",
+    "createAccount": "[Çréåté åççöüñt 创建账户]",
+    "welcomeBack": "[Wélçömé båçk 欢迎回来]",
+    "createYourAccount": "[Çréåté ýöür åççöüñt 创建账户]"
+  },
+  "dashboard": {
+    "title": "[Ðåshböård 仪表板]",
+    "description": "[Fíñåñçíål övérvíéw för {{month}} 财务概览]",
+    "income": "[Íñçömé 收入]",
+    "expenses": "[Éxpéñsés 支出]",
+    "balance": "[Båláñçé 余额]",
+    "toPay": "[Tö påý 待付]",
+    "forecastBalance": "[Föréçåst båláñçé 预测余额]",
+    "totalBalance": "[Tötål båláñçé 总余额]"
+  },
+  "transactions": {
+    "title": "[Tråñsåçtíöñs 交易]",
+    "description": "[Måñågé ýöür íñçömé, éxpéñsés åñd tråñsférs 管理收支]",
+    "new": "[Ñéw Tråñsåçtíöñ 新交易]",
+    "edit": "[Édít Tråñsåçtíöñ 编辑交易]",
+    "type": "[Týpé 类型]",
+    "status": "[Štåtüs 状态]",
+    "category": "[Çåtégörý 分类]",
+    "subcategory": "[Šübçåtégörý 子分类]",
+    "account": "[Åççöüñt 账户]",
+    "amount": "[Åmöüñt 金额]",
+    "date": "[Ðåté 日期]",
+    "dueDate": "[Ðüé dåté 到期日]",
+    "description": "[Ðésçríptíöñ 描述]"
+  },
+  "budget": {
+    "title": "[Möñthlý Büdgét 月度预算]",
+    "description": "[Éxpéñsé plåññíñg 支出计划]",
+    "planned": "[Büdgétéd 预算]",
+    "actual": "[Åçtüål 实际]",
+    "remaining": "[Rémåíñíñg 剩余]",
+    "expand": "[Éxpåñd sübçåtégöríés ({{count}}) 展开子分类]",
+    "collapse": "[Çöllåpsé sübçåtégöríés 折叠子分类]"
+  },
+  "accounts": {
+    "title": "[Åççöüñts 账户]",
+    "description": "[Måñågé ýöür båñk åççöüñts, çårds åñd çåsh 管理账户]",
+    "new": "[Ñéw Åççöüñt 新账户]",
+    "edit": "[Édít Åççöüñt 编辑账户]"
+  },
+  "categories": {
+    "title": "[Çåtégöríés 分类]",
+    "description": "[Örgåñízé ýöür tråñsåçtíöñs 整理交易]",
+    "new": "[Ñéw Çåtégörý 新分类]",
+    "edit": "[Édít Çåtégörý 编辑分类]"
+  },
+  "members": {
+    "title": "[Mémbérs 成员]",
+    "description": "[Måñågé ýöür fåmílý mémbérs 管理家庭成员]",
+    "new": "[Ñéw Mémbér 新成员]",
+    "edit": "[Édít Mémbér 编辑成员]"
+  },
+  "notifications": {
+    "title": "[Ñötífíçåtíöñs 通知]",
+    "description": "[Ålérti hístörý åñd péñdíñg åçtíöñs 提醒历史]",
+    "markAsRead": "[Mårk ås réåd 标记已读]",
+    "markAllAsRead": "[Mårk åll ås réåd 全部已读]",
+    "archive": "[Årçhívé 归档]"
+  },
+  "projection": {
+    "title": "[Prójéçtíöñ 投影]",
+    "startDate": "[Štårt dåté 开始日期]",
+    "endDate": "[Éñd dåté 结束日期]",
+    "openingBalance": "[Öpéñíñg båláñçé 期初余额]",
+    "closingBalance": "[Çlösíñg båláñçé 期末余额]"
+  }
+}

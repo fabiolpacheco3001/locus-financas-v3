@@ -1,0 +1,1399 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "confirm": "Confirm",
+    "close": "Close",
+    "search": "Search",
+    "filter": "Filter",
+    "filters": "Filters",
+    "loading": "Loading...",
+    "noData": "No data found",
+    "actions": "Actions",
+    "yes": "Yes",
+    "no": "No",
+    "all": "All",
+    "none": "None",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "signOut": "Sign out",
+    "required": "Required",
+    "optional": "Optional",
+    "loadMore": "Load more",
+    "remaining": "{{count}} remaining",
+    "seeByAccount": "See by account",
+    "setAsPrimary": "Set as primary",
+    "primary": "Primary",
+    "noCategory": "No category",
+    "transaction": "Transaction",
+    "internalMovement": "Internal movement",
+    "emailHidden": "Email hidden",
+    "used": "used",
+    "setRecurrence": "Set recurrence",
+    "recurrent": "Recurrent",
+    "noSubcategories": "No subcategories",
+    "subcategoriesCount": "{{count}} subcategories",
+    "excludedFromBudget": "Excluded from budget",
+    "excludeFromBudgetDesc": "Expenses in this category won't be included in budget",
+    "days_one": "{{count}} day",
+    "days_other": "{{count}} days",
+    "cta": {
+      "view_transactions": "View transactions",
+      "view_transaction": "View transaction"
+    },
+    "viewTransactions": "View transactions",
+    "viewTransaction": "View transaction",
+    "viewDetails": "View details",
+    "viewPending": "View pending",
+    "copied": "Copied!",
+    "expand": "Expand",
+    "collapse": "Collapse",
+    "refresh": "Refresh",
+    "error": "Error processing",
+    "visible": "Visible",
+    "hidden": "Hidden",
+    "noResults": "No results found",
+    "comingSoon": "Coming soon"
+  },
+  "trash": {
+    "emptyTrash": "Empty Trash",
+    "confirmTitle": "Delete permanently?",
+    "confirmDescription": "This will permanently delete {{count}} cancelled transactions. This action cannot be undone.",
+    "deleteSuccess": "Trash emptied successfully!",
+    "deleteError": "Error emptying trash",
+    "deletePermanently": "Delete permanently"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "transactions": "Transactions",
+    "budget": "Budget",
+    "accounts": "Accounts",
+    "creditCards": "Cards",
+    "categories": "Categories",
+    "members": "Members",
+    "notifications": "Notifications",
+    "appName": "Locus Finanças",
+    "add": "Add",
+    "profile": "Profile",
+    "settings": "Settings",
+    "menu": "Menu"
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Manage your preferences and account settings",
+    "profile": "Profile",
+    "memberSince": "Member since the beginning",
+    "preferences": "Preferences",
+    "language": "Language",
+    "theme": "Theme",
+    "connections": "Connections",
+    "connectionsDescription": "Connect your bank accounts for automatic import"
+  },
+  "auth": {
+    "login": "Sign in",
+    "signup": "Sign up",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "name": "Name",
+    "forgotPassword": "Forgot password",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "createAccount": "Create account",
+    "welcomeBack": "Welcome back",
+    "createYourAccount": "Create your account",
+    "validation": {
+      "invalidEmail": "Invalid email",
+      "passwordMinLength": "Password must be at least 6 characters",
+      "nameMinLength": "Name must be at least 2 characters",
+      "passwordsDoNotMatch": "Passwords do not match"
+    },
+    "success": {
+      "accountCreated": "Account created successfully!",
+      "loginSuccess": "Login successful!"
+    },
+    "errors": {
+      "invalidCredentials": "Invalid email or password.",
+      "emailNotConfirmed": "Please confirm your email to continue.",
+      "userExists": "This email is already registered.",
+      "emailAlreadyInUse": "This email is already registered.",
+      "emailInvalid": "Invalid email.",
+      "passwordWeak": "Weak password. Use letters, numbers and symbols.",
+      "passwordRules": "Use 8+ characters with letters, numbers, and a symbol.",
+      "rateLimit": "Too many attempts. Try again later.",
+      "network": "Connection error. Try again.",
+      "generic": "Something went wrong. Try again."
+    },
+    "continueWithGoogle": "Continue with Google",
+    "orContinueWith": "or continue with",
+    "passwordPolicy": "Password must be at least 8 characters and include uppercase, lowercase, a number, and a symbol.",
+    "passwordLeaked": "This password has appeared in data leaks. Choose a different password."
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "description": "Financial overview for {{month}}",
+    "greeting": {
+      "morning": "Good morning",
+      "afternoon": "Good afternoon",
+      "evening": "Good evening"
+    },
+    "balanceEvolution": "Balance Evolution (30 days)",
+    "expenseDistribution": "Expense Distribution",
+    "income": "Income",
+    "expenses": "Expenses",
+    "confirmedInMonth": "Confirmed this month",
+    "balance": "Available balance",
+    "balanceSubtitle": "(Income − Expenses) adjusted by Reserves",
+    "balanceTooltip": "Monthly balance considering transfers to/from reserve accounts. Transferring to reserve reduces available balance.",
+    "monthBalance": "Monthly Balance",
+    "monthBalanceTooltip": "Net result of this month's transactions only: Realized Income − Realized Expenses.",
+    "accumulatedBalanceSubtitle": "Total across all accounts",
+    "accumulatedBalanceTooltip": "Total money available in all accounts today (Banks + Wallet + Reserves).",
+    "availableBalance": "Available Balance",
+    "availableBalanceTooltip": "Operational cash: balance of all accounts EXCEPT Reserves/Savings. What you have to spend today without touching reserves.",
+    "totalAssets": "Total Assets",
+    "totalAssetsSubtitle": "Total across all accounts (including reserves)",
+    "totalAssetsTooltip": "Total family liquidity: sum of all bank accounts, wallets, and savings.",
+    "closingForecast": "Closing Forecast",
+    "closingForecastTooltip": "Projection: Available Balance + Pending Income − Pending Expenses until month's end. Does NOT include reserves.",
+    "reserves": "Reserves (Savings)",
+    "reservesTooltip": "Amounts saved in accounts marked as 'Savings'. Not counted in Available Balance.",
+    "inReserves": "in reserves",
+    "projectedBalance": "Projected Balance",
+    "projectedBalanceTooltip": "How much you'll have at month's end if all pending income/expenses are received/paid.",
+    "toReceive": "to receive",
+    "toPay": "to pay",
+    "toPayTooltip": "Only planned expenses. Reduces when payment is confirmed.",
+    "pendingCount_one": "{{count}} pending",
+    "pendingCount_other": "{{count}} pending",
+    "noPending": "No pending",
+    "forecast": "Forecast Balance (Month)",
+    "forecastSubtitle": "Final projection considering pending items",
+    "forecastTooltip": "Balance projection for the month considering pending income and expenses.",
+    "forecastBalance": "Forecast balance (month)",
+    "forecastBalanceSubtitle": "(Income + expected) − (Expenses + to pay)",
+    "forecastBalanceTooltip": "Balance projection for the month considering pending items.",
+    "totalBalance": "Total balance (accumulated)",
+    "totalBalanceTooltip": "Current consolidated balance considering all confirmed transactions, regardless of month.",
+    "totalConfirmed": "Total confirmed across all accounts",
+    "currentBalance": "Current balance",
+    "pendingIncome": "Pending income",
+    "pendingExpenses": "Pending expenses",
+    "projected": "Projected",
+    "accountsSummary": "{{count}} accounts",
+    "atRisk": "at risk",
+    "budgetStatus": {
+      "title": "Budget",
+      "ok": "Within budget",
+      "warning": "Warning: close to limit",
+      "over": "Budget exceeded"
+    },
+    "insights": {
+      "title": "Monthly Insights"
+    },
+    "upcomingDue": {
+      "title": "Upcoming Due",
+      "toPay": "to pay",
+      "billToPay": "Bill to pay",
+      "due": "Due",
+      "noBillsInDays": "No bills due in the next {{days}} days",
+      "moreBills": "+{{count}} more bill(s) to pay",
+      "totalToPay": "Total to pay ({{days}} days)"
+    },
+    "budgetRisk": {
+      "title": "Budget Risk",
+      "exceeded": "{{count}} exceeded",
+      "attention": "{{count}} in attention",
+      "noCategoryAtRisk": "No category at risk of exceeding",
+      "budget": "Budget",
+      "realized": "Realized",
+      "pending": "Pending",
+      "moreCategoriesAlert": "+{{count}} category(ies) in alert"
+    },
+    "weekly": {
+      "title": "Spending in the last 7 days",
+      "totalSpent": "Total spent",
+      "transactions": "Transactions",
+      "topCategory": "Top category"
+    },
+    "topCategories": {
+      "title": "Top Expense Categories",
+      "noExpenses": "No expenses recorded this month"
+    },
+    "recentTransactions": {
+      "title": "Recent Transactions",
+      "noTransactions": "No transactions recorded"
+    },
+    "radar": {
+      "overdue": "Overdue",
+      "dueToday": "Due Today",
+      "upcoming7Days": "Next 7 Days",
+      "allClear": "All clear!",
+      "nothingToday": "Nothing due today",
+      "upcomingTooltip": "{{count}} bill(s) due in the next 7 days"
+    }
+  },
+  "transactions": {
+    "title": "Transactions",
+    "description": "Manage your income, expenses and transfers",
+    "new": "Transaction",
+    "edit": "Edit transaction",
+    "searchPlaceholder": "e.g., Grocery store",
+    "type": "Type",
+    "status": "Status",
+    "category": "Category",
+    "subcategory": "Subcategory",
+    "account": "Account",
+    "fromAccount": "From account",
+    "toAccount": "To account",
+    "amount": "Amount",
+    "date": "Date",
+    "dueDate": "Due date",
+    "description": "Description",
+    "member": "Member",
+    "expenseType": "Expense type",
+    "selectCategory": "Select a category",
+    "selectSubcategory": "Select a subcategory",
+    "selectAccount": "Select an account",
+    "selectMember": "Select a member",
+    "kind": {
+      "income": "Income",
+      "expense": "Expense",
+      "transfer": "Transfer",
+      "incomeShort": "Income",
+      "expenseShort": "Expense",
+      "transferShort": "Transf."
+    },
+    "today": "Today",
+    "statusToggle": "Status",
+    "paidQuestion": "Paid?",
+    "paid": "Paid",
+    "pending": "Pending",
+    "received": "Received?",
+    "yes": "Yes",
+    "no": "No",
+    "once": "Once",
+    "recurrence": "Recurrence",
+    "recurringOptions": "Recurrence options",
+    "dayOfMonth": "Day of month",
+    "endMonth": "End month",
+    "optional": "Optional",
+    "moreDetails": "More details",
+    "saveTransaction": "SAVE",
+    "statusLabels": {
+      "confirmed": "Confirmed",
+      "planned": "Pending",
+      "cancelled": "Cancelled"
+    },
+    "expenseTypes": {
+      "fixed": "Fixed",
+      "variable": "Variable"
+    },
+    "actions": {
+      "confirm": "Confirm transaction",
+      "confirmAll": "Confirm all",
+      "confirmAllIncomes": "Confirm all income",
+      "confirmAllExpenses": "Confirm all expenses",
+      "confirmPayment": "Confirm payment",
+      "confirmIncome": "Confirm receipt",
+      "cancel": "Cancel transaction",
+      "duplicate": "Duplicate",
+      "createSimilar": "Create similar",
+      "postpone": "Postpone",
+      "simulate": "Simulate"
+    },
+    "recurring": {
+      "title": "Recurring Transaction",
+      "toggle": "Recurring",
+      "toggleDesc": "Repeat this transaction every month",
+      "frequency": "Frequency",
+      "monthly": "Monthly",
+      "startMonth": "Start month",
+      "endMonth": "End month (optional)",
+      "noEnd": "Indefinite",
+      "dayOfMonth": "Day of month",
+      "repeatMonthly": "Repeat monthly",
+      "advancedOptions": "Advanced options",
+      "setEndMonth": "Set end month",
+      "messages": {
+        "created": "Recurring transaction created successfully",
+        "createdWithDetails": "Recurrence created: {{count}} entries ({{start}} → {{end}})",
+        "deleted": "Recurring transaction deactivated"
+      },
+      "comingSoon": "Feature coming soon",
+      "create": "Create recurrence"
+    },
+    "installments": {
+      "title": "Installments",
+      "number": "Installment {{current}} of {{total}}",
+      "editSingle": "Edit only this installment",
+      "editFuture": "Edit this and future",
+      "deleteSingle": "Delete only this installment",
+      "deleteFuture": "Delete this and future",
+      "installmentCount": "Number of installments",
+      "firstDueDate": "First installment due date",
+      "purchase": "Installment purchase",
+      "countLabel": "Installments",
+      "countPlaceholder": "2 to 24",
+      "total": "Total",
+      "of": "of",
+      "allPendingNote": "All installments will be created as pending"
+    },
+    "filters": {
+      "showCancelled": "Show cancelled",
+      "hideCancelled": "Hide cancelled",
+      "clearFilters": "Clear filters",
+      "overdueExpenses": "Overdue bills",
+      "monthPending": "Bills to pay",
+      "viewing": "Viewing",
+      "latePattern": "Late pattern",
+      "moreFilters": "More filters",
+      "filtersTitle": "Filters",
+      "apply": "Apply",
+      "clear": "Clear"
+    },
+    "sort": {
+      "date": "Date",
+      "category": "Category",
+      "description": "Description",
+      "type": "Type",
+      "dueDate": "Due date",
+      "amount": "Amount"
+    },
+    "empty": {
+      "title": "No transactions found",
+      "description": "Start by adding your first transaction"
+    },
+    "emptyState": "No transactions for this period",
+    "messages": {
+      "created": "Transaction created successfully",
+      "updated": "Transaction updated successfully",
+      "deleted": "Transaction deleted successfully",
+      "confirmed": "Transaction confirmed",
+      "cancelled": "Transaction cancelled",
+      "confirmAllSuccess": "All {{type}} have been confirmed",
+      "selectCategory": "Please select a category for expenses.",
+      "selectSubcategory": "Please select a subcategory for expenses.",
+      "enterDueDate": "Please enter the due date for bills to pay.",
+      "installmentRange": "Number of installments must be between 2 and 24.",
+      "enterFirstDueDate": "Please enter the first installment due date.",
+      "deleteConfirm": "Are you sure you want to delete this transaction?",
+      "futureDateNotAllowed": "A confirmed transaction cannot have a future date."
+    },
+    "pagination": {
+      "showing": "Showing {{displayed}} of {{total}}"
+    },
+    "warnings": {
+      "pastMonthShort": "Transaction from previous month – limited editing",
+      "confirmedShort": "Confirmed transaction – limited editing",
+      "confirmed": "This transaction is already confirmed. Changes may affect your totals."
+    },
+    "form": {
+      "enterDueDate": "Enter due date",
+      "enterDate": "Enter date",
+      "enterAmount": "Enter amount",
+      "selectCategory": "Select a category",
+      "selectSubcategory": "Select a subcategory",
+      "selectCategoryFirst": "Select a category first",
+      "selectAccount": "Select an account",
+      "selectDestAccount": "Select destination account",
+      "descriptionPlaceholder": "e.g., Grocery store"
+    },
+    "suggestion": "Suggestion",
+    "applySuggestion": "Apply",
+    "smartSuggestion": "Smart Suggestion",
+    "recentDescriptions": "Recent Descriptions",
+    "budgetOverflow": "⚠️ This expense will put you at {{percentage}}% of your budget",
+    "summary": {
+      "balance": "Balance",
+      "confirmedIncome": "Confirmed income",
+      "confirmedExpenses": "Confirmed expenses",
+      "plannedIncome": "Planned income",
+      "plannedExpenses": "Planned expenses"
+    },
+    "planned": {
+      "pending": "Not yet paid",
+      "futureIncome": "Future income",
+      "futureIncomeDesc": "Mark if the amount will still be received",
+      "fixedExpense": "Fixed expense to pay",
+      "fixedExpenseDesc": "Fixed expenses remain pending until confirmed"
+    },
+    "monthInOrder": "Month is up to date",
+    "bulkConfirm": {
+      "expenses": "Confirm {{count}} expense(s)",
+      "incomes": "Confirm {{count}} income(s)",
+      "expensesTitle": "Confirm all planned expenses?",
+      "incomesTitle": "Confirm all planned income?",
+      "expensesDescription": "This will confirm all {{count}} planned expense(s) for the month.",
+      "incomesDescription": "This will confirm all {{count}} planned income(s) for the month.",
+      "incomesMessage": "You are about to confirm all planned income for this month.",
+      "incomesEffect": "This will mark the income as confirmed and update this month's totals.",
+      "expensesMessage": "You are about to confirm all planned expenses for this month.",
+      "expensesEffect": "This will mark the expenses as confirmed and update this month's totals."
+    },
+    "confirmDialog": {
+      "title": "Confirm transaction",
+      "message": "You are {{action}} {{amount}} in {{category}} to account {{account}}.",
+      "transferMessage": "You are transferring {{amount}} from {{fromAccount}} to {{toAccount}}.",
+      "receiving": "receiving",
+      "posting": "posting"
+    }
+  },
+  "budget": {
+    "title": "Monthly Budget",
+    "tabs": {
+      "monthly": "Monthly",
+      "recurrences": "Recurrences",
+      "recurrencesTitle": "Recurrences"
+    },
+    "description": "Expense planning — does not represent cash flow",
+    "planned": "Budgeted",
+    "actual": "Actual",
+    "remaining": "Remaining",
+    "overallStatus": "Overall Status",
+    "statusTooltip": "Comparison between total budgeted and realized in the month.",
+    "percentUsed": "{{percent}}% of budget used",
+    "category": "Category",
+    "subcategory": "Subcategory",
+    "amount": "Amount",
+    "budgetCeiling": "Category ceiling",
+    "subcategoriesSum": "Sum of subcategories",
+    "exceeds": "Exceeds ceiling",
+    "expand": "Expand subcategories ({{count}})",
+    "collapse": "Collapse subcategories",
+    "recurring": {
+      "title": "Recurring Budget",
+      "new": "Recurring budget",
+      "newCta": "Recurring budget",
+      "edit": "Edit recurring budget",
+      "startMonth": "Start month",
+      "endMonth": "End month (optional)",
+      "monthly": "This budget repeats monthly",
+      "monthlyAmount": "Monthly amount",
+      "createFor": "Create recurring budget for this category",
+      "createForSubcategory": "Create recurring budget for this subcategory",
+      "deleteConfirm": "Delete this recurring budget? Monthly budgets already generated will be kept.",
+      "perMonth": "month",
+      "from": "From",
+      "until": "until",
+      "noEnd": "no end",
+      "entireCategory": "Entire category",
+      "enterMonthlyAmount": "Enter monthly amount",
+      "enterStartMonth": "Enter start month",
+      "autoGenerateNote": "Budgets will be automatically generated every month.",
+      "create": "Create",
+      "activeTitle": "Active Recurring Budgets",
+      "emptyState": "No recurrences yet.",
+      "comingSoon": "Coming soon",
+      "delete": {
+        "title": "Delete recurrence?",
+        "desc": "This will delete the recurrence and clean generated budgets.",
+        "b1": "Removes budgets auto-generated by this recurrence.",
+        "b2": "Removes months you edited that are still linked to the recurrence.",
+        "b3": "This can't be undone.",
+        "confirm": "Delete",
+        "cancel": "Cancel"
+      },
+      "deleteTitle": "Delete recurring budget?",
+      "deleteDesc": "This removes the recurrence and deletes generated monthly budgets from {{fromMonth}} onward.",
+      "deleteWarning": "Manually edited months will also be deleted.",
+      "deleteIrreversible": "This action can't be undone.",
+      "deleteImpactTitle": "What will happen",
+      "deleteImpact1": "Remove the recurrence",
+      "deleteImpact2": "Delete generated monthly budgets (from the selected month)",
+      "deleteImpact3": "Also delete manually edited months",
+      "deleteImpact4": "Irreversible action (can't undo)",
+      "deleteFromLabel": "Delete from",
+      "deleteFromCurrentMonth": "Current month",
+      "deleteFromSelectedMonth": "Selected month",
+      "deleteFromAllMonths": "All generated months",
+      "deleteAction": "Delete",
+      "deleted": "Recurring budget deleted successfully!"
+    },
+    "empty": {
+      "title": "No budgets defined",
+      "description": "Define budgets to control your spending"
+    },
+    "validation": {
+      "fillRequired": "Please fill in all required fields.",
+      "subcategoryExceedsCeiling": "The sum of subcategories exceeds the category budget. Adjust the values before saving."
+    },
+    "messages": {
+      "created": "Budget created successfully",
+      "updated": "Budget updated successfully",
+      "deleted": "Budget deleted successfully"
+    }
+  },
+  "accounts": {
+    "title": "Accounts",
+    "description": "Manage your bank accounts, cards and cash",
+    "new": "+ Account",
+    "edit": "Edit account",
+    "name": "Name",
+    "namePlaceholder": "e.g., Bank of America",
+    "type": "Type",
+    "initialBalance": "Initial balance",
+    "initialBalanceNote": "An income transaction will be created on the first day of the current month",
+    "currentBalance": "Current balance",
+    "isActive": "Active account",
+    "isPrimary": "Primary account",
+    "isReserve": "Reserve/Piggy bank",
+    "isReserveDesc": "Excluded from available balance",
+    "reserve": "Reserve",
+    "reserves": {
+      "title": "Reserves",
+      "description": "Reserve accounts (excluded from available balance)",
+      "empty": "No reserves",
+      "total": "Total in reserves"
+    },
+    "types": {
+      "BANK": "Bank",
+      "CARD": "Card",
+      "CASH": "Cash"
+    },
+    "sections": {
+      "banks": "Banks",
+      "cards": "Cards",
+      "cash": "Cash"
+    },
+    "empty": {
+      "title": "No accounts",
+      "description": "Add your bank accounts and cards"
+    },
+    "messages": {
+      "created": "Account created successfully",
+      "updated": "Account updated successfully",
+      "deleted": "Account deleted successfully",
+      "deleteConfirm": "Are you sure you want to delete this account?"
+    },
+    "basedOnTransactions": "Based on {{count}} transactions",
+    "reconcile": "Recalculate Balances",
+    "reconcileTooltip": "Synchronize account balances with transaction history",
+    "details": "Details",
+    "calculatedBalance": "Calculated balance",
+    "savedInDb": "Saved in DB",
+    "savedLabel": "Saved",
+    "discrepancy": "Discrepancy",
+    "discrepancyAlert": "Discrepancy of {{diff}} between saved and calculated balance. Use 'Sync Balance' to fix.",
+    "initialBalanceWarning": "Warning: changing this value recalculates the account balance",
+    "syncBalance": "Sync Balance",
+    "syncBalanceTooltip": "Recalculates the balance based on all confirmed transactions.",
+    "syncBalanceConfirm": "Are you sure? This will recalculate the balance using the formula: Initial Balance + Income - Expenses ± Transfers",
+    "viewCalculationDetails": "View calculation details",
+    "breakdown": {
+      "income": "Total Confirmed Income",
+      "expense": "Total Confirmed Expenses",
+      "transfersIn": "Transfers Received",
+      "transfersOut": "Transfers Sent",
+      "result": "Final Result"
+    }
+  },
+  "categories": {
+    "title": "Categories",
+    "description": "Organize your transactions by categories and subcategories",
+    "new": "Category",
+    "edit": "Edit category",
+    "name": "Name",
+    "namePlaceholder": "e.g., Food",
+    "icon": "Icon",
+    "subcategories": "Subcategories",
+    "subcategory": "Subcategory",
+    "newSubcategory": "Subcategory",
+    "subcategoryPlaceholder": "e.g., Grocery store",
+    "addSubcategory": "Add subcategory",
+    "excludeFromBudget": "Exclude from budget",
+    "isEssential": "Essential expense?",
+    "isEssentialDesc": "Check if this expense is essential for the family (e.g., Grocery, Pharmacy)",
+    "essential": "Essential",
+    "empty": {
+      "title": "No categories",
+      "description": "Create categories to organize your transactions"
+    },
+    "messages": {
+      "created": "Category created successfully",
+      "updated": "Category updated successfully",
+      "archived": "Category archived successfully",
+      "restored": "Category restored successfully",
+      "subcategoryCreated": "Subcategory created successfully",
+      "subcategoryArchived": "Subcategory archived successfully",
+      "subcategoryRestored": "Subcategory restored successfully"
+    },
+    "archived": "Archived",
+    "archivedCount": "{{count}} archived",
+    "showArchived": "Show archived",
+    "hideArchived": "Hide archived",
+    "archive": "Archive",
+    "restore": "Restore",
+    "archiveDialog": {
+      "title": "Archive category",
+      "titleSubcategory": "Archive subcategory",
+      "description": "The system preserves transaction history. Instead of deleting, the category will be archived and can be restored at any time.",
+      "descriptionCategory": "All subcategories of this category will also be archived.",
+      "confirm": "Confirm archive",
+      "cancel": "Cancel"
+    }
+  },
+  "members": {
+    "title": "Members",
+    "description": "Manage your family members",
+    "new": "+ Member",
+    "edit": "Edit member",
+    "name": "Name",
+    "namePlaceholder": "Member name",
+    "email": "Email",
+    "emailPlaceholder": "email@example.com",
+    "role": "Role",
+    "roles": {
+      "ADMIN": "Administrator",
+      "MEMBER": "Member"
+    },
+    "empty": {
+      "title": "No members",
+      "description": "Add family members to organize finances"
+    },
+    "messages": {
+      "created": "Member added successfully",
+      "updated": "Member updated successfully",
+      "deleted": "Member removed successfully",
+      "cannotRemoveSelf": "You cannot remove yourself",
+      "cannotDemoteLastAdmin": "Cannot demote the last administrator. Promote another member first.",
+      "cannotRemoveLastAdmin": "Cannot remove the last administrator. Promote another member first.",
+      "deleteConfirm": "Are you sure you want to remove this member?"
+    }
+  },
+  "invites": {
+    "title": "Invite member",
+    "desc": "Generate an invite link to add someone to the family",
+    "invite": "Invite",
+    "email": "Invitee email",
+    "emailPlaceholder": "example@email.com",
+    "emailRequired": "Enter the invitee's email",
+    "role": "Role",
+    "days": "Validity (days)",
+    "create": "Generate link",
+    "createDesc": "Generate a link to invite someone to your family.",
+    "linkLabel": "Invite link",
+    "copyLink": "Copy link",
+    "copyToken": "Copy token",
+    "token": "Token",
+    "link": "Link",
+    "copied": "Copied!",
+    "expiresAt": "Expires on {{date}}",
+    "shareNote": "Send this link to the invitee. They'll need to access it with the specified email.",
+    "shownOnce": "⚠️ This token will only be shown once. Copy it now!",
+    "generateAnother": "Generate another",
+    "dialog": {
+      "title": "Invite",
+      "generate": "Generate invite",
+      "generatedTitle": "Invite generated",
+      "oneTime": "This token will only be shown once."
+    },
+    "fields": {
+      "emailOptional": "Email (optional)",
+      "role": "Role",
+      "expires": "Validity"
+    },
+    "preview": {
+      "valid": "Valid invite",
+      "invalid": "Invalid or expired invite.",
+      "used": "This invite has already been used.",
+      "expired": "This invite has expired.",
+      "ctaAccept": "Join family",
+      "ctaValidate": "Validate"
+    },
+    "join": {
+      "title": "Join family",
+      "desc": "You've been invited to join a family",
+      "name": "Your name",
+      "namePlaceholder": "How you want to be called",
+      "nameOptional": "Optional - your account name will be used if not provided",
+      "pasteToken": "Paste invite token",
+      "tokenPlaceholder": "Token received from admin",
+      "cta": "Accept invite",
+      "success": "Invite accepted!",
+      "redirecting": "Redirecting..."
+    },
+    "inbox": {
+      "title": "Pending invites",
+      "desc": "You have invites waiting for your response",
+      "inviteTitle": "Family invite",
+      "roleLabel": "Role",
+      "accept": "Accept",
+      "expired": "Expired",
+      "expiresIn1Day": "Expires in 1 day",
+      "expiresInDays": "Expires in {{count}} days"
+    },
+    "errors": {
+      "invalidOrExpired": "Invite is invalid or expired",
+      "emailMismatch": "This invite was sent to a different email",
+      "alreadyLinked": "You're already linked to a family",
+      "alreadyInHousehold": "You're already in a family.",
+      "notAllowed": "You need to be signed in to accept the invite",
+      "generic": "Could not process the invite"
+    }
+  },
+  "notifications": {
+    "title": "Notifications",
+    "description": "Alert history and pending actions",
+    "markAsRead": "Mark as read",
+    "markAllAsRead": "Mark all as read",
+    "archive": "Archive",
+    "archiveAll": "Archive all",
+    "dismiss": "Dismiss",
+    "actionRequired": "Action required",
+    "attention": "Attention",
+    "information": "Information",
+    "success": "Success",
+    "info": "Info",
+    "urgent": "urgent",
+    "viewHistory": "View history",
+    "hideHistory": "Hide history",
+    "viewAll": "View all notifications",
+    "noNotifications": "No notifications",
+    "silenceIsGood": "Silence is a good sign!",
+    "urgentActions": "There are urgent financial actions",
+    "attentionAlerts": "There are alerts that deserve attention",
+    "informativeUpdates": "Informative updates",
+    "unread": "unread",
+    "unread_single": "unread",
+    "newNotification": "New notification",
+    "emptyState": "No pending notifications",
+    "filters": {
+      "open": "Open",
+      "all": "All",
+      "unread": "Unread",
+      "action": "Action required",
+      "warning": "Attention",
+      "info": "Information",
+      "archived": "Archived"
+    },
+    "empty": {
+      "title": "No notifications",
+      "openDescription": "No pending notifications. Silence is a good sign!",
+      "filteredDescription": "No notifications found with the selected filters."
+    },
+    "types": {
+      "overduePayment": "Overdue payment",
+      "monthAtRisk": "Month at risk",
+      "coverageRisk": "Coverage risk",
+      "budgetWarning": "Budget warning"
+    },
+    "messages": {
+      "payment_delayed_single": "{{subcategoryName}}{{categoryName}} is {{daysOverdue}} day(s) overdue.",
+      "payment_delayed_multiple": "{{count}} overdue bills. The oldest is {{maxDaysOverdue}} day(s) overdue.",
+      "payment_delayed_title": "Overdue bill",
+      "payment_delayed_title_very": "Very overdue bill",
+      "payment_delayed_title_plural": "Overdue bills",
+      "payment_delayed_title_very_plural": "Very overdue bills",
+      "month_at_risk": "If all bills are paid, the month closes negative by {{amount}}.",
+      "month_at_risk_title": "Risk of closing the month in the red",
+      "month_at_risk_preview": "If all pending bills are paid, your balance will be negative this month.",
+      "month_at_risk_preview_title": "Risk of closing the month in the red",
+      "coverage_risk": "{{description}} is due in {{daysUntilDue}} day(s) and may exceed your balance.",
+      "coverage_risk_title": "Bill may lack coverage",
+      "month_recovered": "With the latest actions, the month returned to positive.",
+      "month_recovered_title": "Month recovered",
+      "risk_reduced": "Your action increased your financial slack by {{amount}}.",
+      "risk_reduced_title": "Good decision",
+      "recurring_late_payment": "You usually pay this bill after the due date.\nWould you like to adjust the due date or create an early reminder?",
+      "recurring_late_payment_title": "Bill usually late",
+      "missing_recurring_expense": "You usually have this expense this month.\nWill it still happen?",
+      "missing_recurring_expense_title": "Recurring expense not recorded",
+      "expense_due_today": "{{description}} is due today. Amount: {{amount}}",
+      "expense_due_today_title": "Bill due today",
+      "generic": "Notification"
+    },
+    "payment_delayed": {
+      "single": {
+        "with_subcategory": "{{subcategory}} – {{category}} is {{days}} day(s) overdue.",
+        "with_category": "{{category}} is {{days}} day(s) overdue.",
+        "with_description": "{{description}} is {{days}} day(s) overdue."
+      },
+      "multiple": "{{count}} overdue bills. The oldest is {{days}} day(s) overdue.",
+      "title": {
+        "overdue": "Overdue bill",
+        "very_overdue": "Very overdue bill"
+      },
+      "title_plural": {
+        "overdue": "Overdue bills",
+        "very_overdue": "Very overdue bills"
+      }
+    },
+    "month_at_risk": {
+      "title": "Risk of closing the month in the red",
+      "message": "If all bills are paid, the month closes negative by {{amount}}.",
+      "preview_message": "If all pending bills are paid, your balance will be negative this month."
+    },
+    "coverage_risk": {
+      "title": "Bill may lack coverage",
+      "message": "{{description}} is due in {{days}} day(s) and may exceed your balance."
+    },
+    "month_recovered": {
+      "title": "Month recovered",
+      "message": "With the latest actions, the month returned to positive."
+    },
+    "risk_reduced": {
+      "title": "Good decision",
+      "message": "Your action increased your financial slack by {{amount}}."
+    },
+    "recurring_late_payment": {
+      "title": "Bill usually late",
+      "message": "You usually pay this bill after the due date.\nWould you like to adjust the due date or create an early reminder?"
+    },
+    "missing_recurring_expense": {
+      "title": "Recurring expense not recorded",
+      "message": "You usually have this expense this month.\nWill it still happen?"
+    },
+    "simulator": {
+      "title": "Notification Simulator",
+      "description": "Test how bank notifications would be received and parsed by the app",
+      "enableNotifications": "Receive bank notifications",
+      "autoParse": "Create transactions automatically",
+      "quickTemplates": "Quick templates",
+      "customNotification": "Custom notification",
+      "titlePlaceholder": "Notification title",
+      "messagePlaceholder": "Message (use {amount} for the value)",
+      "amountPlaceholder": "Amount (e.g., 150.00)",
+      "amountHint": "Use {amount} in the message to insert the formatted value",
+      "send": "Send",
+      "fillFields": "Fill in title and message",
+      "parseAction": "Create transaction",
+      "parsed": "Transaction identified",
+      "transactionCreated": "A new transaction was created based on this notification"
+    }
+  },
+  "toasts": {
+    "risk_month_negative": {
+      "title": "Risk of closing in the red",
+      "description": "The month may close negative by {{amount}}"
+    },
+    "month_recovered": {
+      "title": "🎉 Month recovered!",
+      "description": "With the latest actions, the month returned to positive."
+    },
+    "good_decision": {
+      "title": "✨ Good decision!",
+      "description": "Your action increased your financial slack by {{amount}}."
+    },
+    "risk_reduced": {
+      "title": "Risk reduced",
+      "description": "Your action reduced the financial risk by {{amount}}."
+    }
+  },
+  "insights": {
+    "month_closes_negative": "If you pay all bills, the month closes negative by {{amount}}.",
+    "days_in_red": "The realized balance has been negative for {{days}} day(s).",
+    "postpone_benefit": {
+      "balances": "Postponing \"{{description}}\" ({{amount}}) balances the month.",
+      "reduces": "Postponing \"{{description}}\" ({{amount}}) reduces the deficit to {{deficit}}."
+    },
+    "pending_income_helps": {
+      "balances": "There is {{amount}} in planned income. Confirming them balances the month.",
+      "still_missing": "There is {{amount}} in planned income. But {{missing}} will still be missing."
+    },
+    "overdue_payments": "{{count}} overdue bill(s) totaling {{total}}.",
+    "overdue_payments_one": "{{count}} overdue bill totaling {{total}}.",
+    "overdue_payments_other": "{{count}} overdue bills totaling {{total}}.",
+    "largest_pending_expense": "The largest pending expense is \"{{description}}\" ({{amount}}), representing {{percentage}}% of the total to pay.",
+    "action_hint": {
+      "postpone": "Consider postponing or splitting this expense.",
+      "regularize": "Prioritize regularizing these bills."
+    }
+  },
+  "errors": {
+    "auth": {
+      "invalid_credentials": "Incorrect email or password.",
+      "email_not_confirmed": "Confirm your email before logging in.",
+      "email_registered": "This email is already registered.",
+      "signup_disabled": "Registration temporarily unavailable.",
+      "rate_limit": "Too many attempts. Please wait a few minutes.",
+      "invalid_email": "Invalid email. Check the format.",
+      "password_too_short": "Password must be at least 6 characters.",
+      "password_weak": "Password is too weak. Use letters, numbers and symbols.",
+      "jwt_expired": "Your session has expired. Please log in again."
+    },
+    "business": {
+      "insufficient_balance": "Insufficient balance for the transfer."
+    },
+    "fk": {
+      "transactions_account": "Cannot delete this account because there are linked transactions.",
+      "transactions_category": "Cannot delete this category because there are linked transactions.",
+      "transactions_subcategory": "Cannot delete this subcategory because there are linked transactions.",
+      "transactions_member": "Cannot delete this member because there are linked transactions.",
+      "budgets_category": "Cannot delete this category because there are linked budgets.",
+      "budgets_subcategory": "Cannot delete this subcategory because there are linked budgets.",
+      "subcategories_category": "Cannot delete this category because there are linked subcategories.",
+      "generic": "Cannot delete because there are linked records."
+    },
+    "unique": {
+      "budget_exists": "A budget already exists for this month. Edit the existing one.",
+      "generic": "A record with this data already exists."
+    },
+    "constraint": {
+      "not_null": "Please fill in the required fields to continue.",
+      "check": "The data entered is not valid."
+    },
+    "permission": {
+      "rls": "You do not have permission to perform this action.",
+      "denied": "You do not have permission to perform this action.",
+      "login_required": "You need to be logged in to perform this action."
+    },
+    "network": {
+      "connection": "Connection error. Check your internet.",
+      "timeout": "The operation took too long. Please try again."
+    },
+    "generic": {
+      "no_household": "You need to be in a household to continue.",
+      "unknown": "Could not complete the action. Please try again."
+    }
+  },
+  "simulation": {
+    "mode": "Simulation Mode",
+    "description": "You are in simulation mode.",
+    "nothingSaved": "Nothing will be saved.",
+    "pendingBillsThisMonth": "Pending bills this month",
+    "pendingBillsAfter": "Pending bills after simulation",
+    "impact": "Impact",
+    "impactOnToPay": "on To pay",
+    "gainedBreathingRoom": "You gained financial breathing room this month ✓",
+    "clearSimulation": "Clear simulation",
+    "simulatePostponement": "Simulate postponement",
+    "simulateInstallments": "Simulate installments",
+    "simulateDeletion": "Simulate deletion",
+    "postponement": {
+      "title": "Simulate Postponement",
+      "description": "See the impact without changing actual data",
+      "currentDueDate": "Current due date",
+      "newDueDate": "New due date (simulated)",
+      "simulateTo": "Simulate to",
+      "start": "Start Simulation",
+      "descriptionFormat": "Postponement of \"{{description}}\" to {{month}}"
+    },
+    "installment": {
+      "title": "Simulate Installment",
+      "description": "See the impact without changing actual data",
+      "dueDate": "Due date",
+      "numberOfInstallments": "Number of installments",
+      "amountPerInstallment": "Amount per installment",
+      "installmentPreview": "Installment preview",
+      "start": "Start Simulation",
+      "descriptionFormat": "Installment of \"{{description}}\" in {{count}}x of {{amount}}"
+    },
+    "deletion": {
+      "descriptionFormat": "Deletion of \"{{description}}\" ({{amount}})"
+    }
+  },
+  "filters": {
+    "account": "Account",
+    "overdueExpenses": "Overdue bills",
+    "pendingExpenses": "Bills to pay",
+    "dueToday": "Due today",
+    "dueThisWeek": "Next 7 days",
+    "viewing": "Viewing",
+    "latePattern": "Late pattern",
+    "allAccounts": "All accounts",
+    "allCategories": "All categories",
+    "allSubcategories": "All subcategories"
+  },
+  "stickyFilters": {
+    "filters": "Filters",
+    "filterTitle": "Filter transactions",
+    "filterDescription": "Select the desired filters",
+    "applyFilters": "Apply",
+    "clearFilters": "Clear filters"
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "goToPrevious": "Go to previous page",
+    "goToNext": "Go to next page",
+    "morePages": "More pages"
+  },
+  "status": {
+    "cancelled": "Cancelled",
+    "fixed": "Fixed",
+    "future": "Future",
+    "toPay": "To pay",
+    "paid": "Paid",
+    "monthUnderControl": "Month under control ✓",
+    "riskCloseInRed": "Warning: risk of closing in the red",
+    "noPending": "No pending bills 🎉",
+    "pendingCount_one": "{{count}} pending",
+    "pendingCount_other": "{{count}} pending",
+    "budgetExceeded": "Budget exceeded",
+    "closeToLimit": "Warning: close to limit",
+    "underBudget": "Within budget",
+    "percentUsed": "{{percent}}% of budget used",
+    "markAsPaid": "Mark as paid",
+    "markAsPending": "Mark as pending"
+  },
+"settings": {
+    "title": "Settings",
+    "language": "Language",
+    "languages": {
+      "pt-BR": "Portuguese (Brazil)",
+      "es": "Spanish",
+      "en": "English"
+    },
+    "theme": "Theme",
+    "themes": {
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "currency": "Currency",
+    "dateFormat": "Date format"
+  },
+  "projection": {
+    "title": "Balance Projection",
+    "projectedUntil": "Projected until {{date}}",
+    "projectedBalance": "Projected balance",
+    "quickSimulator": "Quick Simulator",
+    "clear": "Clear",
+    "currentProjected": "Current projected",
+    "withSimulation": "With simulation",
+    "impact": "Impact",
+    "futureIncome": "Future income",
+    "billsToPay": "Bills to pay",
+    "noDescription": "No description",
+    "otherItems": "+{{count}} other items",
+    "understandVariation": "Understand variation",
+    "suggestionsNoAutoAction": "Suggestions for analysis – no automatic action",
+    "confirmIncome": "Confirm income",
+    "evaluatePostponement": "Evaluate postponement",
+    "dueOn": "Due on {{date}}",
+    "showVariationDetails": "Show variation details",
+    "hideVariationDetails": "Hide details",
+    "closeSimulator": "Close simulator",
+    "simulateTransaction": "Simulate transaction",
+    "active": "Active",
+    "relevant": "Relevant",
+    "show": "Show",
+    "accountOf": "{{current}} of {{total}}",
+    "noRelevantAccounts": "No accounts with relevant activity",
+    "noAccounts": "No accounts found",
+    "totalConsolidated": "Total consolidated",
+    "allAccounts": "All accounts",
+    "totalVariation": "Total variation",
+    "totalVariationWithSimulation": "Total variation (with simulation)",
+    "clearSimulation": "Clear simulation"
+  },
+  "creditCards": {
+    "title": "Credit Cards",
+    "pageTitle": "Credit Cards",
+    "pageDescription": "Manage your credit cards and track your invoices",
+    "myCards": "My Cards",
+    "new": "+ Card",
+    "edit": "Edit Card",
+    "name": "Card name",
+    "namePlaceholder": "e.g., Chase, Amex, Discover...",
+    "brand": "Brand",
+    "selectBrand": "Select brand",
+    "limit": "Limit",
+    "closingDay": "Closing day",
+    "dueDay": "Due day",
+    "color": "Card color",
+    "availableLimit": "Available limit",
+    "usedLimit": "Used limit",
+    "currentInvoice": "Current invoice",
+    "invoiceMonth": "{{month}} invoice",
+    "empty": {
+      "title": "No cards registered",
+      "description": "Register your credit cards to track spending and invoices."
+    },
+    "deleteConfirm": {
+      "title": "Remove card?",
+      "description": "The card {{name}} will be removed. Existing transactions will not be affected."
+    },
+    "deleteBlocked": "Cannot delete card with history. There are {{count}} linked transactions. Archive it or delete the transactions first.",
+    "paymentMethod": {
+      "label": "Payment method",
+      "debit": "Debit",
+      "credit_card": "Credit card",
+      "cash": "Cash",
+      "pix": "Pix",
+      "boleto": "Bank slip"
+    },
+    "selectCard": "Select card",
+    "invoiceInfo": "{{month}} invoice, due on {{dueDay}}",
+    "invoiceInfoWithDate": "Invoice due date: {{dueDate}}"
+  },
+  "gamification": {
+    "level": "Level {{level}}",
+    "totalXp": "{{xp}} XP total",
+    "nextLevel": "Next: {{name}}",
+    "progressTo": "Progress to {{name}}",
+    "streak": "{{days}} day streak",
+    "streakShort": "{{days}} days",
+    "maxLevel": "Max level reached!",
+    "levelUp": "🎉 Level up to {{level}}: {{name}}!",
+    "xpGained": "+{{xp}} XP",
+    "levels": {
+      "beginner": "Beginner",
+      "organizer": "Organizer",
+      "saver": "Saver",
+      "investor": "Investor",
+      "master": "Wealth Master"
+    }
+  },
+  "audit": {
+    "title": "Pending Transactions Audit",
+    "description": "Lists ALL pending expenses (ignoring date filters) to identify old or incorrect records.",
+    "found": "{{count}} pending transactions found",
+    "noPendingTransactions": "No pending transactions found! ✨",
+    "originalDate": "Original Date",
+    "noDate": "NO DATE",
+    "invalidDate": "Invalid date",
+    "markAsPaid": "Mark as paid",
+    "cancel": "Cancel transaction",
+    "markedAsPaid": "Transaction marked as paid!",
+    "transactionCancelled": "Transaction cancelled!",
+    "confirmCancel": "Cancel this transaction?",
+    "confirmCancelDescription": "The transaction \"{{description}}\" for {{amount}} will be permanently cancelled.",
+    "confirmDelete": "Yes, cancel"
+  },
+  "futureEngine": {
+    "title": "Smart Projection",
+    "syncBadge": "Synced via Open Finance",
+    "estimatedBalance": "Estimated Balance (End of Month)",
+    "safeZone": "Safe Spending Zone",
+    "availableToSpend": "available to spend",
+    "daysRemaining": "{{count}} days remaining",
+    "daysRemaining_one": "{{count}} day remaining",
+    "breakdown": {
+      "title": "Breakdown",
+      "fixedExpenses": "Fixed Expenses",
+      "variableAverage": "Variable (avg)"
+    },
+    "disclaimer": "Based on your current spending patterns",
+    "insufficientData": "Insufficient data for projection (minimum 3 months)",
+    "risk": {
+      "safe": "Comfortable position",
+      "caution": "Watch your spending",
+      "danger": "Risk of negative balance"
+    },
+    "confidence": {
+      "high": "High confidence",
+      "highTooltip": "Projection based on 3+ months of history",
+      "medium": "Medium confidence",
+      "mediumTooltip": "Projection with partial data",
+      "low": "Limited data",
+      "lowTooltip": "Insufficient data for accurate projection"
+    }
+  },
+  "openFinance": {
+    "wizard": {
+      "title": "Connect Open Finance",
+      "stepLabel": "Step {{current}} of {{total}}",
+      "complete": "Complete",
+      "error": "Error"
+    },
+    "benefits": {
+      "title": "Supercharge your finances",
+      "subtitle": "Connect your bank accounts for more accurate projections and personalized insights",
+      "projections": {
+        "title": "Smart Projections",
+        "description": "Balance forecasts based on real account data"
+      },
+      "insights": {
+        "title": "Personalized Insights",
+        "description": "Automatic analysis of your spending patterns"
+      },
+      "automation": {
+        "title": "Auto Sync",
+        "description": "Transactions imported daily without manual effort"
+      },
+      "security": {
+        "title": "Bank-Level Security",
+        "description": "End-to-end encryption and regulatory compliance"
+      },
+      "trustBadge": "Regulated by the Central Bank",
+      "cta": "Got it, continue"
+    },
+    "permissions": {
+      "title": "Access Permissions",
+      "subtitle": "Choose which data you want to share with us",
+      "readOnlyBadge": "Read-Only Access",
+      "accounts": {
+        "label": "Bank Accounts",
+        "description": "Name and type of your accounts"
+      },
+      "balances": {
+        "label": "Balances",
+        "description": "Current balance of each account"
+      },
+      "transactions": {
+        "label": "Transactions",
+        "description": "Transaction history"
+      },
+      "creditCards": {
+        "label": "Credit Cards",
+        "description": "Statements and available limits"
+      },
+      "investments": {
+        "label": "Investments",
+        "description": "Investment positions and returns"
+      },
+      "required": "Required",
+      "privacyLabel": "I have read and accept the Privacy Policy and data processing terms",
+      "dataManifesto": "Locus Data Manifesto (Privacy Compliance)",
+      "notificationsLabel": "Sync notifications",
+      "notificationsDescription": "Receive alerts when new data is imported",
+      "cta": "Select bank"
+    },
+    "bankSelection": {
+      "title": "Select your bank",
+      "subtitle": "Choose the financial institution to connect",
+      "searchPlaceholder": "Search bank...",
+      "noResults": "No banks found",
+      "redirectInfo": "You will be redirected to authorize",
+      "securityNote": "Secure connection via Open Finance",
+      "connecting": "Connecting...",
+      "cta": "Connect bank"
+    },
+    "success": {
+      "title": "Connection started!",
+      "subtitle": "We are waiting for your bank's authorization",
+      "syncingStatus": "Awaiting authorization",
+      "nextSteps": {
+        "title": "Next steps",
+        "step1": "Your bank will process the connection request",
+        "step2": "Once authorized, your data will be synced",
+        "step3": "Your projections will be updated automatically"
+      },
+      "autoSyncInfo": "Automatic sync every 24 hours",
+      "cta": "Back to Dashboard"
+    },
+    "toast": {
+      "connectionCreated": "Connection started",
+      "awaitingAuthorization": "Awaiting bank authorization",
+      "connectionRevoked": "Connection revoked successfully",
+      "error": "Connection error"
+    },
+    "comingSoon": "Coming soon"
+  },
+  "fileImport": {
+    "title": "Import transactions",
+    "description": "Import transactions from bank statements in CSV or OFX format.",
+    "processing": "Processing file...",
+    "success": "File processed successfully!",
+    "tryAgain": "Try again",
+    "dropHere": "Drop a file here",
+    "orClick": "or click to select",
+    "selectAccount": "Select account",
+    "selectAccountDescription": "Choose the account where transactions will be imported.",
+    "selectAccountPlaceholder": "Select an account",
+    "transactionsToImport": "transactions will be imported",
+    "importing": "Importing...",
+    "import": "Import",
+    "mapping": {
+      "title": "Map columns",
+      "subtitle": "Associate file columns with Locus fields",
+      "required": "Required",
+      "optional": "Optional",
+      "date": "Date",
+      "description": "Description",
+      "amount": "Amount",
+      "type": "Type (C/D)",
+      "category": "Category",
+      "selectColumn": "Select column",
+      "ignore": "Ignore",
+      "preview": "Preview of first transactions",
+      "confirm": "Confirm and import"
+    },
+    "summary": {
+      "successTitle": "Import completed!",
+      "partialTitle": "Import with warnings",
+      "imported": "Imported",
+      "skipped": "Skipped",
+      "errors": "Errors",
+      "errorList": "Error details",
+      "importMore": "Import another file"
+    },
+    "errors": {
+      "parseFailed": "Failed to process file",
+      "noTransactions": "No transactions found",
+      "mappingFailed": "Failed to map columns",
+      "importFailed": "Failed to import transactions"
+    }
+  },
+  "quickAdd": {
+    "title": "Quick entry",
+    "descriptionPlaceholder": "Description (Enter to save)",
+    "selectAccount": "Account",
+    "selectCategory": "Category (optional)",
+    "hint": {
+      "tab": "next field",
+      "enter": "save"
+    },
+    "success": {
+      "expense": "Expense recorded!",
+      "income": "Income recorded!"
+    },
+    "errors": {
+      "invalidAmount": "Invalid amount",
+      "failed": "Failed to save transaction"
+    }
+  },
+  "smartImport": {
+    "title": "Smart Import",
+    "uploadDescription": "Drag your CSV or OFX file. AI will automatically categorize your transactions.",
+    "reviewDescription": "Review suggested categories before confirming the import.",
+    "importingDescription": "Importing transactions to Locus...",
+    "successDescription": "All transactions were imported successfully!",
+    "dropzone": "Drag a file here or click to select",
+    "supportedFormats": "Formats: CSV, OFX",
+    "noTransactionsFound": "No transactions found in the file",
+    "parseError": "Error processing the file",
+    "transactions": "Transactions",
+    "categorized": "Categorized",
+    "netPositive": "Net positive",
+    "netNegative": "Net negative",
+    "uncategorized": "Uncategorized",
+    "confirmAll": "Confirm all",
+    "importing": "Importing transactions",
+    "successTitle": "Import completed!",
+    "successMessage": "{{count}} transactions were added to Locus.",
+    "learningMessage": "Locus learned your patterns! Next time will be even faster.",
+    "noDefaultAccount": "No default account found. Please create an account first.",
+    "selectCategory": "Select category",
+    "searchCategory": "Search category...",
+    "confidence": {
+      "high": "High confidence",
+      "medium": "Medium confidence",
+      "low": "Low confidence",
+      "none": "Manual suggestion"
+    }
+  },
+  "onboarding": {
+    "title": "Welcome to Locus Finanças!",
+    "description": "To get started, you need to create a household or join an existing one.",
+    "createHousehold": {
+      "title": "Create Household",
+      "description": "Create a new household to manage your finances.",
+      "nameLabel": "Household Name",
+      "namePlaceholder": "e.g., Smith Family",
+      "button": "Create Household"
+    },
+    "joinHousehold": {
+      "title": "Join with Invite",
+      "description": "Accept an invite to join an existing household.",
+      "inviteReceived": "Invite received",
+      "expiresAt": "Expires: {{date}}",
+      "accept": "Accept",
+      "noInvites": "You have no pending invites.",
+      "useToken": "Use invite token"
+    },
+    "success": {
+      "householdCreated": "Household created successfully!"
+    },
+    "errors": {
+      "nameRequired": "Household name is required",
+      "createFailed": "Failed to create household. Please try again."
+    }
+  }
+}
