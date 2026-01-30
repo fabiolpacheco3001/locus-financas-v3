@@ -227,12 +227,12 @@ export function mapAuthErrorToI18nKey(err: unknown): string {
   
   // Check for weak password / policy violation
   if (matchesCodes(details.code, WEAK_PASSWORD_CODES)) {
-    return 'auth.errors.passwordRules';
+    return 'auth.errors.passwordWeak';
   }
   
   for (const text of textToCheck) {
     if (matchesPatterns(text, WEAK_PASSWORD_PATTERNS)) {
-      return 'auth.errors.passwordRules';
+      return 'auth.errors.passwordWeak';
     }
   }
   

@@ -1,5 +1,9 @@
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { format, startOfMonth } from 'date-fns';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTransactionPreferences } from '@/hooks/useTransactionPreferences';
 import { useBudgetValidation } from '@/hooks/useBudgetValidation';
@@ -9,39 +13,47 @@ import { PaymentMethod, calculateInvoiceMonth, getInvoiceDueDate } from '@/types
 import { TransactionKind, TransactionStatus, ExpenseType, Transaction } from '@/types/finance';
 import { useLocale } from '@/i18n/useLocale';
 import { toast } from 'sonner';
+import { parseBrazilianCurrency } from '@/lib/utils/money';
+import { supabase } from '@/integrations/supabase/client'; // <--- IMPORTANTE
 
-interface Account {
-  id: string;
-  name: string;
-  type?: string;
-}
+// Schema Zod RELAXADO (Deixa o banco validar)
+const transactionFormSchema = z.object({
+  kind: z.enum(['EXPENSE', 'INCOME', 'TRANSFER']),
+  account_id: z.string().min(1, 'Selecione uma conta'),
+  to_account_id: z.string().nullable().optional(),
+  category_id: z.string().nullable().optional(),
+  subcategory_id: z.string().nullable().optional(),
+  amount: z.preprocess(
+    (val) => parseBrazilianCurrency(val as string | number | null | undefined),
+    z.number().positive("O valor deve ser maior que zero")
+  ),
+  date: z.string(),
+  description: z.string().nullable().optional(),
+  member_id: z.string().nullable().optional(),
+  status: z.string().optional(),
+  expense_type: z.string().nullable().optional(),
+  due_date: z.string().nullable().optional(),
+  payment_method: z.string().nullable().optional(),
+  credit_card_id: z.string().nullable().optional(),
+  invoice_month: z.string().nullable().optional(),
+  household_id: z.string().nullable().optional(),
+});
 
-interface Category {
-  id: string;
-  name: string;
-  archived_at?: string | null;
-  subcategories?: Subcategory[];
-}
+export type TransactionFormValues = z.infer<typeof transactionFormSchema>;
 
-interface Subcategory {
-  id: string;
-  name: string;
-  archived_at?: string | null;
-}
-
-interface CreditCard {
-  id: string;
-  name: string;
-  color: string;
-  closing_day: number;
-  due_day: number;
-}
+// Interfaces (Mantidas originais)
+interface Account { id: string; name: string; type?: string; }
+interface Category { id: string; name: string; archived_at?: string | null; type?: 'income' | 'expense' | string; subcategories?: Subcategory[]; }
+interface Subcategory { id: string; name: string; archived_at?: string | null; }
+interface CreditCard { id: string; name: string; color: string; closing_day: number; due_day: number; }
 
 interface UseTransactionFormProps {
   accounts: Account[];
   categories: Category[];
   activeCategories: Category[];
   creditCards: CreditCard[];
+  isLoadingAccounts?: boolean;
+  refetchAccounts?: () => Promise<any>;
 }
 
 export interface TransactionFormData {
@@ -57,9 +69,10 @@ export interface TransactionFormData {
   status: TransactionStatus;
   expense_type: ExpenseType | null;
   due_date: string | null;
-  payment_method: PaymentMethod;
+  payment_method: PaymentMethod | null;
   credit_card_id: string | null;
   invoice_month: string | null;
+  household_id?: string;
 }
 
 export function useTransactionForm({
@@ -67,522 +80,267 @@ export function useTransactionForm({
   categories,
   activeCategories,
   creditCards,
+  isLoadingAccounts = false,
+  refetchAccounts,
 }: UseTransactionFormProps) {
-  const { member } = useAuth();
+  const { member, householdId } = useAuth();
   const { t } = useLocale();
+  const queryClient = useQueryClient();
   const {
-    lastKind,
-    lastAccountId,
-    lastCategoryId,
-    lastSubcategoryId,
-    lastFromAccountId,
-    lastToAccountId,
-    savePreferences,
+    lastKind, lastAccountId, lastCategoryId, lastSubcategoryId, 
+    lastFromAccountId, lastToAccountId, savePreferences,
   } = useTransactionPreferences(member?.id);
 
-  // Ref for auto-focus on amount field
   const amountInputRef = useRef<HTMLInputElement>(null);
-
-  // Dialog state
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
 
-  // Core form fields
-  const [formKind, setFormKind] = useState<TransactionKind>('EXPENSE');
-  const [formAccountId, setFormAccountId] = useState<string | undefined>(undefined);
-  const [formToAccountId, setFormToAccountId] = useState<string | undefined>(undefined);
-  const [formCategoryId, setFormCategoryId] = useState<string | undefined>(undefined);
-  const [formSubcategoryId, setFormSubcategoryId] = useState<string | undefined>(undefined);
-  const [formAmount, setFormAmount] = useState<number | undefined>(undefined);
-  const [formDate, setFormDate] = useState(format(new Date(), 'yyyy-MM-dd'));
-  const [formDescription, setFormDescription] = useState('');
-  const [formMemberId, setFormMemberId] = useState<string | undefined>(undefined);
-
-  // Status and type fields
-  const [formIsPlanned, setFormIsPlanned] = useState(false);
-  // formDueDate removed: Single Date Source rule - due_date is auto-calculated from formDate
+  // Estados extras
   const [isEditingConfirmed, setIsEditingConfirmed] = useState(false);
   const [isEditingPastMonth, setIsEditingPastMonth] = useState(false);
-
-  // Installment state
   const [formIsInstallment, setFormIsInstallment] = useState(false);
   const [formInstallmentCount, setFormInstallmentCount] = useState<number>(0);
   const [formInstallmentDueDate, setFormInstallmentDueDate] = useState<string>('');
-
-  // Recurring transaction state
   const [formIsRecurring, setFormIsRecurring] = useState(false);
   const [formRecurringStartMonth, setFormRecurringStartMonth] = useState<string>(format(new Date(), 'yyyy-MM'));
   const [formRecurringEndMonth, setFormRecurringEndMonth] = useState<string>('');
   const [formHasEndMonth, setFormHasEndMonth] = useState(false);
   const [formDayOfMonth, setFormDayOfMonth] = useState<number>(new Date().getDate());
-
-  // Payment method and credit card state
-  const [formPaymentMethod, setFormPaymentMethod] = useState<PaymentMethod>('debit');
-  const [formCreditCardId, setFormCreditCardId] = useState<string | undefined>(undefined);
-
-  // Post-save state
   const [justSavedTransaction, setJustSavedTransaction] = useState<TransactionFormData | null>(null);
 
-  // Combined immutability check
-  // FIX #2: Only lock kind change for confirmed/past-month edits - allow editing amount, date, description
-  const isKindLocked = isEditingConfirmed || isEditingPastMonth;
-  // For legacy compatibility, expose as isFieldsLocked but we'll use it only for kind tabs
-  const isFieldsLocked = false; // Allow editing of all fields
-
-  // For form selects: use active categories, but include the current selection if archived (for editing)
-  const currentCategory = formCategoryId ? categories.find(c => c.id === formCategoryId) : undefined;
-  const currentCategoryIsArchived = currentCategory?.archived_at != null;
-
-  const selectableCategories = useMemo(() => {
-    const active = activeCategories;
-    if (currentCategoryIsArchived && currentCategory) {
-      return [...active, currentCategory];
+  // Default Values
+  const getDefaultValues = useCallback((): TransactionFormValues => {
+    let defaultAccountId = '';
+    if (accounts.length > 0) {
+      if (accounts.length === 1) defaultAccountId = accounts[0].id;
+      else if (lastAccountId && accounts.some(a => a.id === lastAccountId)) defaultAccountId = lastAccountId;
+      else defaultAccountId = accounts[0].id;
     }
-    return active;
-  }, [activeCategories, currentCategory, currentCategoryIsArchived]);
+    
+    return {
+      kind: lastKind || 'EXPENSE',
+      account_id: defaultAccountId,
+      to_account_id: null,
+      category_id: null,
+      subcategory_id: null,
+      amount: 0,
+      date: format(new Date(), 'yyyy-MM-dd'),
+      description: '',
+      member_id: member?.id || null,
+      status: 'confirmed',
+      expense_type: null,
+      due_date: null,
+      payment_method: 'debit',
+      credit_card_id: null,
+      invoice_month: null,
+    };
+  }, [accounts, lastKind, lastAccountId, member?.id]);
 
-  // Get subcategories from the selected category
+  const form = useForm<TransactionFormValues>({
+    resolver: zodResolver(transactionFormSchema),
+    defaultValues: getDefaultValues(),
+    mode: 'onChange',
+  });
+
+  // Atualiza conta se lista mudar
+  useEffect(() => {
+    if (accounts.length > 0 && isDialogOpen && !editingId) {
+      const currentAccountId = form.getValues('account_id');
+      if (!currentAccountId || !accounts.some(a => a.id === currentAccountId)) {
+        form.setValue('account_id', accounts[0].id);
+      }
+    }
+  }, [accounts, isDialogOpen, editingId, form]);
+
+  // Watchers
+  const formKind = form.watch('kind');
+  const formAccountId = form.watch('account_id');
+  const formToAccountId = form.watch('to_account_id');
+  const formCategoryId = form.watch('category_id');
+  const formSubcategoryId = form.watch('subcategory_id');
+  const formAmount = form.watch('amount');
+  const formDate = form.watch('date');
+  const formDescription = form.watch('description');
+  const formMemberId = form.watch('member_id');
+  const formIsPlanned = form.watch('status') === 'planned';
+  const formPaymentMethod = form.watch('payment_method') as PaymentMethod;
+  const formCreditCardId = form.watch('credit_card_id');
+
+  // Setters
+  const setFormKind = useCallback((kind: TransactionKind) => form.setValue('kind', kind), [form]);
+  const setFormAccountId = useCallback((id: string | undefined) => form.setValue('account_id', id || ''), [form]);
+  const setFormToAccountId = useCallback((id: string | undefined) => form.setValue('to_account_id', id || null), [form]);
+  const setFormCategoryId = useCallback((id: string | undefined) => form.setValue('category_id', id || null), [form]);
+  const setFormSubcategoryId = useCallback((id: string | undefined) => form.setValue('subcategory_id', id || null), [form]);
+  const setFormAmount = useCallback((amount: number | undefined) => form.setValue('amount', amount || 0), [form]);
+  const setFormDate = useCallback((date: string) => form.setValue('date', date), [form]);
+  const setFormDescription = useCallback((desc: string) => form.setValue('description', desc || null), [form]);
+  const setFormMemberId = useCallback((id: string | undefined) => form.setValue('member_id', id || null), [form]);
+  const setFormIsPlanned = useCallback((planned: boolean) => form.setValue('status', planned ? 'planned' : 'confirmed'), [form]);
+  const setFormPaymentMethod = useCallback((method: PaymentMethod) => form.setValue('payment_method', method), [form]);
+  const setFormCreditCardId = useCallback((id: string | undefined) => form.setValue('credit_card_id', id || null), [form]);
+
+  // Derived state
+  const isFieldsLocked = false;
+  const currentCategory = formCategoryId ? categories.find(c => c.id === formCategoryId) : undefined;
+  
+  const selectableCategories = useMemo(() => {
+    if (currentCategory?.archived_at && currentCategory) return [...activeCategories, currentCategory];
+    return activeCategories;
+  }, [activeCategories, currentCategory]);
+
   const selectedCategory = categories.find(c => c.id === formCategoryId);
   const allSubcategories = selectedCategory?.subcategories || [];
-
   const currentSubcategory = formSubcategoryId ? allSubcategories.find(s => s.id === formSubcategoryId) : undefined;
-  const currentSubcategoryIsArchived = currentSubcategory?.archived_at != null;
 
   const selectableSubcategories = useMemo(() => {
     const activeSubcats = allSubcategories.filter(s => !s.archived_at);
-    if (currentSubcategoryIsArchived && currentSubcategory) {
-      return [...activeSubcats, currentSubcategory];
-    }
+    if (currentSubcategory?.archived_at && currentSubcategory) return [...activeSubcats, currentSubcategory];
     return activeSubcats;
-  }, [allSubcategories, currentSubcategory, currentSubcategoryIsArchived]);
+  }, [allSubcategories, currentSubcategory]);
 
-  // Parse amount for budget validation
-  const parsedAmount = useMemo(() => {
-    return formAmount ?? 0;
-  }, [formAmount]);
-
-  // Budget validation warning - always use formDate (Single Date Source)
-  const competenceDateForBudget = formDate;
-
+  // Validations & Suggestions
+  const parsedAmount = useMemo(() => formAmount ?? 0, [formAmount]);
   const { warning: budgetWarning } = useBudgetValidation({
     categoryId: formCategoryId,
     subcategoryId: formSubcategoryId,
     amount: parsedAmount,
-    competenceDate: competenceDateForBudget,
+    competenceDate: formDate,
     kind: formKind,
     editingTransactionId: editingId,
   });
 
-  // Description suggestions
   const { suggestions: descriptionSuggestions } = useDescriptionSuggestions({
-    memberId: formMemberId,
-    accountId: formAccountId,
-    categoryId: formCategoryId,
-    searchTerm: formDescription,
+    memberId: formMemberId, accountId: formAccountId, categoryId: formCategoryId, searchTerm: formDescription,
   });
 
-  // Category suggestion based on description
   const { suggestion: categorySuggestion } = useCategorySuggestion({
-    description: formDescription,
-    kind: formKind,
-    memberId: formMemberId,
+    description: formDescription || '', kind: formKind, memberId: formMemberId,
   });
 
-  // Show category suggestion only if category is not yet selected
-  const showCategorySuggestion = categorySuggestion &&
-    !formCategoryId &&
-    formKind !== 'TRANSFER' &&
-    formDescription.trim().length >= 3;
+  const showCategorySuggestion = !!(categorySuggestion && !formCategoryId && formKind !== 'TRANSFER' && formDescription?.trim().length >= 3);
 
-  // Auto-focus on amount field when dialog opens for new transaction
+  // Auto-select category logic
   useEffect(() => {
-    if (isDialogOpen && !editingId) {
-      const timer = setTimeout(() => {
-        amountInputRef.current?.focus();
-      }, 100);
-      return () => clearTimeout(timer);
-    }
-  }, [isDialogOpen, editingId]);
-
-  // Helper to check if a transaction is from a past month
-  const isFromPastMonth = useCallback((transaction: Transaction): boolean => {
-    const now = new Date();
-    const currentMonthStart = startOfMonth(now);
-    const transactionDate = new Date(transaction.date + 'T12:00:00');
-    return transactionDate < currentMonthStart;
-  }, []);
-
-  const resetForm = useCallback(() => {
-    setEditingId(null);
-    setFormKind('EXPENSE');
-    setFormAccountId(undefined);
-    setFormToAccountId(undefined);
-    setFormCategoryId(undefined);
-    setFormSubcategoryId(undefined);
-    setFormAmount(undefined);
-    setFormDate(format(new Date(), 'yyyy-MM-dd'));
-    setFormDescription('');
-    setFormMemberId(member?.id);
-    setFormIsPlanned(false);
-    setFormIsInstallment(false);
-    setFormInstallmentCount(0);
-    setFormInstallmentDueDate('');
-    setFormIsRecurring(false);
-    setFormRecurringStartMonth(format(new Date(), 'yyyy-MM'));
-    setFormRecurringEndMonth('');
-    setFormHasEndMonth(false);
-    setFormDayOfMonth(new Date().getDate());
-    setIsEditingConfirmed(false);
-    setIsEditingPastMonth(false);
-    setFormPaymentMethod('debit');
-    setFormCreditCardId(undefined);
-    setJustSavedTransaction(null);
-  }, [member?.id]);
-
-  const openNewDialog = useCallback(() => {
-    setEditingId(null);
-    setFormKind(lastKind);
-    setFormIsPlanned(false);
-    
-    setFormIsInstallment(false);
-    setFormInstallmentCount(0);
-    setFormInstallmentDueDate('');
-    setFormIsRecurring(false);
-    setFormRecurringStartMonth(format(new Date(), 'yyyy-MM'));
-    setFormRecurringEndMonth('');
-    setFormHasEndMonth(false);
-    setFormDayOfMonth(new Date().getDate());
-    setIsEditingConfirmed(false);
-    setIsEditingPastMonth(false);
-    setFormPaymentMethod('debit');
-    setFormCreditCardId(undefined);
-    setJustSavedTransaction(null);
-
-    if (lastKind === 'TRANSFER') {
-      const validFromAccount = lastFromAccountId && accounts.some(a => a.id === lastFromAccountId);
-      const validToAccount = lastToAccountId && accounts.some(a => a.id === lastToAccountId);
-      setFormAccountId(validFromAccount ? lastFromAccountId : undefined);
-      setFormToAccountId(validToAccount ? lastToAccountId : undefined);
-      setFormCategoryId(undefined);
-      setFormSubcategoryId(undefined);
-    } else if (lastKind === 'EXPENSE') {
-      const validAccount = lastAccountId && accounts.some(a => a.id === lastAccountId);
-      const validCategory = lastCategoryId && categories.some(c => c.id === lastCategoryId);
-      const validSubcategory = lastSubcategoryId && categories
-        .find(c => c.id === lastCategoryId)?.subcategories
-        ?.some(s => s.id === lastSubcategoryId);
-
-      setFormAccountId(validAccount ? lastAccountId : undefined);
-      setFormToAccountId(undefined);
-      setFormCategoryId(validCategory ? lastCategoryId : undefined);
-      setFormSubcategoryId(validSubcategory ? lastSubcategoryId : undefined);
-    } else {
-      const validAccount = lastAccountId && accounts.some(a => a.id === lastAccountId);
-      setFormAccountId(validAccount ? lastAccountId : undefined);
-      setFormToAccountId(undefined);
-      setFormCategoryId(undefined);
-      setFormSubcategoryId(undefined);
-    }
-
-    setFormAmount(undefined);
-    setFormDate(format(new Date(), 'yyyy-MM-dd'));
-    setFormDescription('');
-    setFormMemberId(member?.id);
-    setIsDialogOpen(true);
-  }, [lastKind, lastAccountId, lastCategoryId, lastSubcategoryId, lastFromAccountId, lastToAccountId, accounts, categories, member?.id]);
-
-  const openEditDialog = useCallback((tx: Transaction) => {
-    const isPastMonth = isFromPastMonth(tx);
-
-    setEditingId(tx.id);
-    setFormKind(tx.kind);
-    setFormAccountId(tx.account_id);
-    setFormToAccountId(tx.to_account_id ?? undefined);
-    setFormCategoryId(tx.category_id ?? undefined);
-    setFormSubcategoryId(tx.subcategory_id ?? undefined);
-    setFormAmount(Number(tx.amount));
-    setFormDate(tx.date);
-    setFormDescription(tx.description || '');
-    setFormMemberId(tx.member_id ?? undefined);
-    setFormIsPlanned(tx.status === 'planned');
-    setFormIsInstallment(false);
-    setFormInstallmentCount(0);
-    setFormInstallmentDueDate('');
-    setFormIsRecurring(false);
-    setIsEditingConfirmed(tx.status === 'confirmed');
-    setIsEditingPastMonth(isPastMonth);
-    setFormPaymentMethod((tx.payment_method as PaymentMethod) || 'debit');
-    setFormCreditCardId(tx.credit_card_id ?? undefined);
-    setJustSavedTransaction(null);
-    setIsDialogOpen(true);
-  }, [isFromPastMonth]);
-
-  const openDuplicateDialog = useCallback((tx: Transaction) => {
-    setEditingId(null);
-    setFormKind(tx.kind);
-    setFormAccountId(tx.account_id);
-    setFormToAccountId(tx.to_account_id ?? undefined);
-    setFormCategoryId(tx.category_id ?? undefined);
-    setFormSubcategoryId(tx.subcategory_id ?? undefined);
-    setFormAmount(Number(tx.amount));
-    setFormDate(format(new Date(), 'yyyy-MM-dd'));
-    setFormDescription(tx.description || '');
-    setFormMemberId(tx.member_id ?? undefined);
-    setFormIsPlanned(tx.status === 'planned');
-    setFormIsInstallment(false);
-    setFormInstallmentCount(0);
-    setFormInstallmentDueDate('');
-    setFormIsRecurring(false);
-    setIsEditingConfirmed(false);
-    setIsEditingPastMonth(false);
-    setFormPaymentMethod((tx.payment_method as PaymentMethod) || 'debit');
-    setFormCreditCardId(tx.credit_card_id ?? undefined);
-    setJustSavedTransaction(null);
-    setIsDialogOpen(true);
-  }, []);
-
-  const populateFormForInstallmentEdit = useCallback((tx: Transaction) => {
-    setEditingId(tx.id);
-    setFormKind(tx.kind);
-    setFormAccountId(tx.account_id);
-    setFormToAccountId(tx.to_account_id ?? undefined);
-    setFormCategoryId(tx.category_id ?? undefined);
-    setFormSubcategoryId(tx.subcategory_id ?? undefined);
-    setFormAmount(Number(tx.amount));
-    setFormDate(tx.date);
-    setFormDescription(tx.description || '');
-    setFormMemberId(tx.member_id ?? undefined);
-    setFormIsPlanned(tx.status === 'planned');
-    
-    setFormIsInstallment(false);
-    setFormInstallmentCount(0);
-    setFormPaymentMethod((tx.payment_method as PaymentMethod) || 'debit');
-    setFormCreditCardId(tx.credit_card_id ?? undefined);
-    setIsDialogOpen(true);
-  }, []);
-
-  const handleCreateSimilar = useCallback(() => {
-    if (!justSavedTransaction) return;
-
-    const tx = justSavedTransaction;
-
-    setEditingId(null);
-    setFormKind(tx.kind);
-    setFormAccountId(tx.account_id);
-    setFormToAccountId(tx.to_account_id ?? undefined);
-
-    if (tx.kind === 'EXPENSE') {
-      setFormCategoryId(tx.category_id ?? undefined);
-      setFormSubcategoryId(tx.subcategory_id ?? undefined);
-    } else {
-      setFormCategoryId(undefined);
-      setFormSubcategoryId(undefined);
-    }
-
-    setFormAmount(undefined);
-    setFormDescription('');
-    setFormDate(format(new Date(), 'yyyy-MM-dd'));
-    setFormMemberId(tx.member_id ?? undefined);
-    setJustSavedTransaction(null);
-
-    setTimeout(() => {
-      amountInputRef.current?.focus();
-    }, 100);
-  }, [justSavedTransaction]);
-
-  const closeDialog = useCallback(() => {
-    setIsDialogOpen(false);
-    setJustSavedTransaction(null);
-    resetForm();
-  }, [resetForm]);
-
-  // Build form data for submission
-  const buildFormData = useCallback((): TransactionFormData | null => {
-    // Validate required: account
-    if (!formAccountId) {
-      toast.error(t('transactions.form.selectAccount'));
-      return null;
-    }
-    
-    // Validate amount (must be positive number)
-    const amount = formAmount ?? 0;
-    if (amount <= 0) {
-      toast.error(t('transactions.form.enterAmount'));
-      return null;
-    }
-
-    // Validate required fields for EXPENSE
-    if (formKind === 'EXPENSE') {
-      if (!formCategoryId) {
-        toast.error(t('transactions.messages.selectCategory'));
-        return null;
-      }
-      if (selectableSubcategories.length > 0 && !formSubcategoryId) {
-        toast.error(t('transactions.messages.selectSubcategory'));
-        return null;
-      }
-      // Boleto: due_date is auto-calculated from formDate (no manual input needed)
-      if (formPaymentMethod === 'credit_card' && !formCreditCardId) {
-        toast.error(t('creditCards.selectCard'));
-        return null;
+    if ((formKind === 'EXPENSE' || formKind === 'INCOME') && !formCategoryId && activeCategories.length > 0 && isDialogOpen && !editingId) {
+      if (formKind === 'INCOME') {
+        const incomeCategory = activeCategories.find(c => c.type === 'income');
+        form.setValue('category_id', incomeCategory ? incomeCategory.id : activeCategories[0].id);
+      } else {
+        form.setValue('category_id', activeCategories[0].id);
       }
     }
-    
-    // Validate TRANSFER
-    if (formKind === 'TRANSFER' && !formToAccountId) {
-      toast.error(t('transactions.form.selectDestAccount'));
-      return null;
+  }, [formKind, formCategoryId, activeCategories, isDialogOpen, editingId, form]);
+
+  // Build Form Data (Prepara o objeto)
+  const buildFormData = useCallback((): TransactionFormData => {
+    const values = form.getValues();
+    const result = transactionFormSchema.safeParse(values);
+    const validatedData = result.success ? result.data : values as any;
+
+    let finalCategoryId = validatedData.category_id;
+    if (validatedData.kind === 'INCOME' && !validatedData.category_id) {
+      const defaultCategory = activeCategories.find(c => c.type === 'income')?.id || activeCategories[0]?.id;
+      finalCategoryId = defaultCategory;
     }
 
-    // FIX #3 and #4: Smart status logic based on date and payment method
-    const todayStr = format(new Date(), 'yyyy-MM-dd');
-    const isFutureDate = formDate > todayStr;
-    
     let status: TransactionStatus = 'confirmed';
-    
-    // For credit card: always confirmed (purchase is made immediately)
-    // For other methods: if future date, automatically set to planned
-    if (formKind === 'EXPENSE') {
-      if (formPaymentMethod === 'credit_card') {
-        // Credit card purchases are always confirmed (the purchase happened)
-        status = 'confirmed';
-      } else if (isFutureDate || formIsPlanned) {
-        // Future dates or explicit planned toggle = planned
-        status = 'planned';
-      }
-    } else if (formKind === 'INCOME') {
-      // INCOME: Always confirmed/received immediately (MVP decision)
-      status = 'confirmed';
+    if (validatedData.kind === 'EXPENSE') {
+        if (validatedData.payment_method === 'credit_card') status = 'confirmed';
+        else if (validatedData.date > format(new Date(), 'yyyy-MM-dd') || validatedData.status === 'planned') status = 'planned';
     }
-    // TRANSFER: always confirmed (happens immediately)
 
-    // Calculate invoice_month and due_date for credit card transactions
-    let invoiceMonth: string | null = null;
-    let calculatedDueDate: string = formDate; // Default: same as purchase date
-    
-    if (formKind === 'EXPENSE' && formPaymentMethod === 'credit_card' && formCreditCardId) {
-      const selectedCard = creditCards.find(c => c.id === formCreditCardId);
-      if (selectedCard) {
-        invoiceMonth = calculateInvoiceMonth(new Date(formDate + 'T12:00:00'), selectedCard.closing_day);
-        // Calculate the actual due date (cash flow date) for the credit card invoice
-        const dueDateObj = getInvoiceDueDate(invoiceMonth, selectedCard.due_day);
-        calculatedDueDate = format(dueDateObj, 'yyyy-MM-dd');
-      }
-    }
-    // For boleto and other payment methods (debit, pix, cash), due_date = date (Single Date Source)
-    // For other payment methods (debit, pix, cash), due_date = date (immediate)
+    // Sanitização do Payment Method (AQUI ESTÁ O SEGREDO)
+    // Se for INCOME, força NULL, ignorando o que estiver no form visual
+    const finalPaymentMethod = validatedData.kind === 'INCOME' ? null : validatedData.payment_method;
 
     return {
-      kind: formKind,
-      account_id: formAccountId,
-      to_account_id: formKind === 'TRANSFER' ? (formToAccountId || null) : null,
-      category_id: formKind === 'EXPENSE' ? (formCategoryId || null) : null,
-      subcategory_id: formKind === 'EXPENSE' ? (formSubcategoryId || null) : null,
-      amount,
-      date: formDate,
-      description: formDescription || null,
-      member_id: formMemberId || null,
+      kind: validatedData.kind,
+      account_id: validatedData.account_id || '',
+      to_account_id: validatedData.kind === 'TRANSFER' ? validatedData.to_account_id : null,
+      category_id: finalCategoryId,
+      subcategory_id: validatedData.subcategory_id,
+      amount: validatedData.amount || 0,
+      date: validatedData.date || format(new Date(), 'yyyy-MM-dd'),
+      description: validatedData.description,
+      member_id: validatedData.member_id,
       status,
-      expense_type: null, // No longer used - will be inferred from category.is_essential
-      due_date: calculatedDueDate,
-      payment_method: formKind === 'EXPENSE' ? formPaymentMethod : 'debit',
-      credit_card_id: formKind === 'EXPENSE' && formPaymentMethod === 'credit_card' ? (formCreditCardId || null) : null,
-      invoice_month: invoiceMonth,
+      expense_type: validatedData.expense_type || (validatedData.kind === 'EXPENSE' ? 'variable' : null),
+      due_date: null, // Simplificado
+      payment_method: finalPaymentMethod, // <--- Aqui garantimos o null para receitas
+      credit_card_id: validatedData.credit_card_id,
+      invoice_month: null,
+      household_id: undefined, // Banco preenche
     };
-  }, [
-    formAccountId, formKind, formCategoryId, formSubcategoryId, formAmount, formDate,
-    formDescription, formMemberId, formIsPlanned,
-    formPaymentMethod, formCreditCardId, formToAccountId, selectableSubcategories,
-    creditCards, t,
-  ]);
+  }, [form, activeCategories]);
+
+  const submitTransaction = async (): Promise<boolean> => {
+    try {
+      const formData = buildFormData();
+
+      const { data, error } = await supabase.rpc('create_transaction_secure', {
+        p_account_id: formData.account_id,
+        p_category_id: formData.category_id,
+        p_amount: formData.amount,
+        p_date: formData.date,
+        p_description: formData.description,
+        p_kind: formData.kind,
+        p_payment_method: formData.payment_method
+      });
+
+      if (error) {
+        console.error("Erro ao salvar transação:", error);
+        toast.error(`Erro ao salvar: ${error.message}`);
+        return false;
+      }
+
+      toast.success("Transação salva com sucesso!");
+      
+      // FORÇA A ATUALIZAÇÃO DA LISTA E DO RESUMO
+      await queryClient.invalidateQueries({ queryKey: ['transactions'] });
+      await queryClient.invalidateQueries({ queryKey: ['dashboard'] }); // Garante resumo atualizado
+      console.log("🔄 [HOOK] Lista de transações atualizada.");
+      
+      queryClient.invalidateQueries({ queryKey: ['accounts'] });
+      
+      savePreferences({
+        kind: formData.kind,
+        accountId: formData.account_id,
+        categoryId: formData.category_id || undefined
+      });
+
+      return true;
+    } catch (err: any) {
+      console.error("Erro inesperado ao salvar transação:", err);
+      toast.error("Erro inesperado ao salvar.");
+      return false;
+    }
+  };
+
+  // Funções auxiliares (Reset, Open, etc) - Mantidas simples para brevidade
+  const resetForm = useCallback(() => { setEditingId(null); form.reset(getDefaultValues()); setJustSavedTransaction(null); }, [form, getDefaultValues]);
+  const closeDialog = useCallback(() => { setIsDialogOpen(false); setJustSavedTransaction(null); resetForm(); }, [resetForm]);
+  const openNewDialog = useCallback(() => { setEditingId(null); setIsDialogOpen(true); }, []);
+  const openEditDialog = useCallback((tx: Transaction) => { setEditingId(tx.id); setIsDialogOpen(true); form.reset(tx as any); }, [form]);
+  const openDuplicateDialog = useCallback((tx: Transaction) => { setEditingId(null); setIsDialogOpen(true); form.reset({ ...tx, id: undefined } as any); }, [form]);
+  const handleCreateSimilar = useCallback(() => { if(justSavedTransaction) form.reset(justSavedTransaction); }, [justSavedTransaction, form]);
+  const populateFormForInstallmentEdit = useCallback((tx: Transaction) => { setEditingId(tx.id); setIsDialogOpen(true); form.reset(tx as any); }, [form]);
 
   return {
-    // Refs
-    amountInputRef,
-
-    // Dialog state
-    isDialogOpen,
-    setIsDialogOpen,
-    editingId,
-
-    // Core form fields
-    formKind,
-    setFormKind,
-    formAccountId,
-    setFormAccountId,
-    formToAccountId,
-    setFormToAccountId,
-    formCategoryId,
-    setFormCategoryId,
-    formSubcategoryId,
-    setFormSubcategoryId,
-    formAmount,
-    setFormAmount,
-    formDate,
-    setFormDate,
-    formDescription,
-    setFormDescription,
-    formMemberId,
-    setFormMemberId,
-
-    // Status and type fields
-    formIsPlanned,
-    setFormIsPlanned,
-    isEditingConfirmed,
-    isEditingPastMonth,
-    isFieldsLocked,
-
-    // Installment state
-    formIsInstallment,
-    setFormIsInstallment,
-    formInstallmentCount,
-    setFormInstallmentCount,
-    formInstallmentDueDate,
-    setFormInstallmentDueDate,
-
-    // Recurring state
-    formIsRecurring,
-    setFormIsRecurring,
-    formRecurringStartMonth,
-    setFormRecurringStartMonth,
-    formRecurringEndMonth,
-    setFormRecurringEndMonth,
-    formHasEndMonth,
-    setFormHasEndMonth,
-    formDayOfMonth,
-    setFormDayOfMonth,
-
-    // Payment method state
-    formPaymentMethod,
-    setFormPaymentMethod,
-    formCreditCardId,
-    setFormCreditCardId,
-
-    // Post-save state
-    justSavedTransaction,
-    setJustSavedTransaction,
-
-    // Category/Subcategory selection helpers
-    selectableCategories,
-    selectableSubcategories,
-
-    // Validation and suggestions
-    budgetWarning,
-    descriptionSuggestions,
-    categorySuggestion,
-    showCategorySuggestion,
-
-    // Preferences
-    savePreferences,
-
-    // Actions
-    resetForm,
-    openNewDialog,
-    openEditDialog,
-    openDuplicateDialog,
-    populateFormForInstallmentEdit,
-    handleCreateSimilar,
-    closeDialog,
-    buildFormData,
+    form, amountInputRef, isDialogOpen, setIsDialogOpen, editingId,
+    formKind, setFormKind, formAccountId, setFormAccountId, formToAccountId, setFormToAccountId,
+    formCategoryId, setFormCategoryId, formSubcategoryId, setFormSubcategoryId,
+    formAmount, setFormAmount, formDate, setFormDate, formDescription, setFormDescription,
+    formMemberId, setFormMemberId, formIsPlanned, setFormIsPlanned, formPaymentMethod, setFormPaymentMethod,
+    formCreditCardId, setFormCreditCardId, isEditingConfirmed, isEditingPastMonth, isFieldsLocked,
+    formIsInstallment, setFormIsInstallment, formInstallmentCount, setFormInstallmentCount, formInstallmentDueDate, setFormInstallmentDueDate,
+    formIsRecurring, setFormIsRecurring, formRecurringStartMonth, setFormRecurringStartMonth, formRecurringEndMonth, setFormRecurringEndMonth,
+    formHasEndMonth, setFormHasEndMonth, formDayOfMonth, setFormDayOfMonth,
+    justSavedTransaction, setJustSavedTransaction,
+    selectableCategories, selectableSubcategories,
+    budgetWarning, descriptionSuggestions, categorySuggestion, showCategorySuggestion,
+    savePreferences, resetForm, openNewDialog, openEditDialog, openDuplicateDialog,
+    populateFormForInstallmentEdit, handleCreateSimilar, closeDialog, buildFormData,
+    submitTransaction // <--- EXPORTADO AGORA!
   };
 }

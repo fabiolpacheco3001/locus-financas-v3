@@ -7,6 +7,9 @@ import { Transaction, ExpenseType } from '@/types/finance';
 import { useLocale } from '@/i18n/useLocale';
 import { toast } from 'sonner';
 import { InstallmentActionType } from '@/components/transactions/InstallmentActionDialog';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
+import { useQueryClient } from '@tanstack/react-query';
 interface Account {
   id: string;
   name: string;
@@ -39,9 +42,16 @@ interface TransactionFormType {
   populateFormForInstallmentEdit: (tx: Transaction) => void;
 }
 
+interface Category {
+  id: string;
+  name: string;
+  type?: 'income' | 'expense' | string;
+}
+
 interface UseTransactionHandlersProps {
   transactionForm: TransactionFormType;
   accounts: Account[];
+  categories?: Category[];
   createTransaction: ReturnType<typeof useTransactions>['createTransaction'];
   updateTransaction: ReturnType<typeof useTransactions>['updateTransaction'];
   deleteTransaction: ReturnType<typeof useTransactions>['deleteTransaction'];
@@ -51,12 +61,15 @@ interface UseTransactionHandlersProps {
 export function useTransactionHandlers({
   transactionForm,
   accounts,
+  categories = [],
   createTransaction,
   updateTransaction,
   deleteTransaction,
   confirmTransaction,
 }: UseTransactionHandlersProps) {
   const { t, formatCurrency } = useLocale();
+  const { householdId, member, user } = useAuth();
+  const queryClient = useQueryClient();
   const { createInstallments, updateInstallment, deleteInstallment } = useInstallments();
   const { createRecurringTransaction } = useRecurringTransactions();
   const { awardTransactionXp, awardConfirmationXp } = useGamification();
@@ -106,12 +119,22 @@ export function useTransactionHandlers({
   const saveTransaction = useCallback(async (data: any) => {
     const isNewTransaction = !transactionForm.editingId;
     
+    console.log('[Save Transaction] Iniciando salvamento:', {
+      isNewTransaction,
+      editingId: transactionForm.editingId,
+      data,
+    });
+    
     try {
       if (transactionForm.editingId) {
+        console.log('[Save Transaction] Atualizando transação existente...');
         const scope = (window as any).__installmentEditScope as 'single' | 'this_and_future' | undefined;
         const installmentData = (window as any).__installmentEditData as Transaction | undefined;
         
+        console.log('[Save Transaction] Dados de parcela:', { scope, hasInstallmentGroup: !!installmentData?.installment_group_id });
+        
         if (scope && installmentData?.installment_group_id) {
+          console.log('[Save Transaction] Atualizando parcela(s)...');
           await updateInstallment.mutateAsync({
             id: transactionForm.editingId,
             scope,
@@ -126,13 +149,18 @@ export function useTransactionHandlers({
           
           delete (window as any).__installmentEditScope;
           delete (window as any).__installmentEditData;
+          console.log('[Save Transaction] Parcela atualizada com sucesso');
         } else {
+          console.log('[Save Transaction] Atualizando transação normal...');
           await updateTransaction.mutateAsync({ id: transactionForm.editingId, ...data });
+          console.log('[Save Transaction] Transação atualizada com sucesso');
         }
         
         transactionForm.closeDialog();
       } else {
+        console.log('[Save Transaction] Criando nova transação...');
         await createTransaction.mutateAsync(data);
+        console.log('[Save Transaction] Transação criada com sucesso');
         transactionForm.savePreferences({
           kind: data.kind,
           accountId: data.account_id,
@@ -153,108 +181,64 @@ export function useTransactionHandlers({
           setShowRecurrenceSuggestion(true);
         }, 500);
       }
-    } catch {
-      // Error already handled by mutation's onError
+    } catch (error) {
+      // Error already handled by mutation's onError, but log unexpected errors
+      console.error('[Transaction Save Error]', error);
+      // If it's not a mutation error, show a generic error message
+      if (error && typeof error === 'object' && !('message' in error)) {
+        toast.error('Erro ao salvar transação. Por favor, tente novamente.');
+      }
     }
   }, [transactionForm, createTransaction, updateTransaction, updateInstallment, awardTransactionXp]);
 
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (isMutationPending) return;
-    
-    const data = transactionForm.buildFormData();
-    if (!data) {
+    if (isMutationPending) {
+      console.warn('[Form Submit] Mutation já está em andamento, ignorando submit');
       return;
     }
     
-    // Handle installment creation for new transactions on credit cards
-    const selectedAccount = accounts.find(a => a.id === transactionForm.formAccountId);
-    const isCardExpense = transactionForm.formKind === 'EXPENSE' && selectedAccount?.type === 'CARD';
-    
-    if (isCardExpense && transactionForm.formIsInstallment && !transactionForm.editingId) {
-      if (transactionForm.formInstallmentCount < 2 || transactionForm.formInstallmentCount > 24) {
-        toast.error(t('transactions.messages.installmentRange'));
-        return;
+    try {
+      // buildFormData sempre retorna dados (validações removidas - banco vai dar erro se necessário)
+      const data = transactionForm.buildFormData();
+      console.log("⚡ [RPC] Iniciando envio seguro...", data);
+
+      // 1. Sanitização Básica no Frontend
+      const cleanPaymentMethod = data.kind === 'INCOME' ? null : data.payment_method;
+
+      // 2. Chamada Direta à RPC (Ignora RLS e Household ID do front)
+      const { data: rpcData, error: rpcError } = await (supabase.rpc as any)('create_transaction_secure', {
+        p_account_id: data.account_id,
+        p_category_id: data.category_id,
+        p_amount: data.amount,
+        p_date: data.date,
+        p_description: data.description,
+        p_kind: data.kind,
+        p_payment_method: cleanPaymentMethod
+      });
+
+      if (rpcError) {
+        console.error("❌ [RPC] Erro no Banco:", rpcError);
+        toast.error(`Erro ao salvar: ${rpcError.message}`);
+        throw rpcError;
       }
-      if (!transactionForm.formInstallmentDueDate) {
-        toast.error(t('transactions.messages.enterFirstDueDate'));
-        return;
-      }
-      if (!transactionForm.formCategoryId) {
-        toast.error(t('transactions.messages.selectCategory'));
-        return;
-      }
+
+      console.log("✅ [RPC] Sucesso:", rpcData);
+      toast.success("Transação salva com sucesso!");
+
+      // 3. Reset e Fechamento
+      transactionForm.form.reset();
+      transactionForm.closeDialog();
       
-      try {
-        await createInstallments.mutateAsync({
-          account_id: transactionForm.formAccountId!,
-          category_id: transactionForm.formCategoryId!,
-          subcategory_id: transactionForm.formSubcategoryId,
-          member_id: transactionForm.formMemberId,
-          total_amount: data.amount,
-          installment_count: transactionForm.formInstallmentCount,
-          due_date: transactionForm.formInstallmentDueDate,
-          description: transactionForm.formDescription,
-        });
-        
-        transactionForm.savePreferences({
-          kind: transactionForm.formKind,
-          accountId: transactionForm.formAccountId,
-          categoryId: transactionForm.formCategoryId,
-          subcategoryId: transactionForm.formSubcategoryId,
-        });
-        
-        transactionForm.closeDialog();
-      } catch {
-        // Error already handled by mutation's onError
-      }
-      return;
-    }
-    
-    // Handle recurring transaction creation
-    if (transactionForm.formIsRecurring && !transactionForm.editingId) {
-      try {
-        await createRecurringTransaction.mutateAsync({
-          kind: transactionForm.formKind as any,
-          amount: data.amount,
-          description: transactionForm.formDescription || null,
-          account_id: transactionForm.formAccountId!,
-          to_account_id: transactionForm.formKind === 'TRANSFER' ? transactionForm.formToAccountId : null,
-          category_id: transactionForm.formKind === 'EXPENSE' ? (transactionForm.formCategoryId || null) : null,
-          subcategory_id: transactionForm.formKind === 'EXPENSE' ? (transactionForm.formSubcategoryId || null) : null,
-          member_id: transactionForm.formMemberId || null,
-          expense_type: null, // Let DB infer from category.is_essential
-          day_of_month: transactionForm.formDayOfMonth,
-          start_month: transactionForm.formRecurringStartMonth,
-          end_month: transactionForm.formHasEndMonth ? transactionForm.formRecurringEndMonth : null,
-        });
-        
-        transactionForm.savePreferences({
-          kind: transactionForm.formKind,
-          accountId: transactionForm.formAccountId,
-          toAccountId: transactionForm.formKind === 'TRANSFER' ? transactionForm.formToAccountId : undefined,
-          categoryId: transactionForm.formCategoryId,
-          subcategoryId: transactionForm.formSubcategoryId,
-        });
-        
-        awardTransactionXp();
-        transactionForm.closeDialog();
-      } catch {
-        // Error already handled by mutation's onError
-      }
-      return;
-    }
+      // Invalidar queries para atualizar a lista
+      queryClient.invalidateQueries({ queryKey: ['transactions'] });
+      queryClient.invalidateQueries({ queryKey: ['accounts'] });
 
-    // Check if confirmation is needed (amount > 1000 or TRANSFER)
-    if (data.amount > 1000 || transactionForm.formKind === 'TRANSFER') {
-      setPendingTransactionData(data);
-      setIsConfirmDialogOpen(true);
-      return;
+    } catch (error) {
+      console.error("❌ Erro fatal no submit:", error);
     }
-
-    await saveTransaction(data);
-  }, [isMutationPending, transactionForm, accounts, createInstallments, createRecurringTransaction, awardTransactionXp, saveTransaction, t]);
+  }, [transactionForm, isMutationPending, queryClient]);
 
   const handleConfirmSave = useCallback(async () => {
     if (pendingTransactionData) {

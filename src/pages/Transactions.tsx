@@ -118,19 +118,27 @@ export default function TransactionsPage() {
     singleTransactionId: isSingleTransactionView ? urlTransactionId : undefined,
   });
   
-  const { accounts } = useAccounts();
+  const { accounts, isLoading: isLoadingAccounts, refetchAccounts } = useAccounts();
   const { categories, activeCategories } = useCategories();
   const { members } = useMembers();
   const { creditCards } = useCreditCards(selectedMonth);
   const { budgets } = useBudgets(selectedMonth.getFullYear(), selectedMonth.getMonth() + 1);
   
   // Transaction form hook
-  const transactionForm = useTransactionForm({ accounts, categories, activeCategories, creditCards });
+  const transactionForm = useTransactionForm({ 
+    accounts, 
+    categories, 
+    activeCategories, 
+    creditCards,
+    isLoadingAccounts,
+    refetchAccounts,
+  });
   
   // Transaction handlers hook
   const handlers = useTransactionHandlers({
     transactionForm: transactionForm as any,
     accounts,
+    categories: activeCategories,
     createTransaction,
     updateTransaction,
     deleteTransaction,
@@ -377,6 +385,8 @@ export default function TransactionsPage() {
       {/* Form Dialog */}
       <TransactionFormDialog
         open={transactionForm.isDialogOpen} onOpenChange={transactionForm.setIsDialogOpen} editingId={transactionForm.editingId}
+        form={transactionForm.form}
+        submitTransaction={transactionForm.submitTransaction}
         formKind={transactionForm.formKind} setFormKind={transactionForm.setFormKind}
         formAccountId={transactionForm.formAccountId} setFormAccountId={transactionForm.setFormAccountId}
         formToAccountId={transactionForm.formToAccountId} setFormToAccountId={transactionForm.setFormToAccountId}
@@ -404,7 +414,6 @@ export default function TransactionsPage() {
         descriptionSuggestions={transactionForm.descriptionSuggestions} categorySuggestion={transactionForm.categorySuggestion} showCategorySuggestion={transactionForm.showCategorySuggestion}
         amountInputRef={transactionForm.amountInputRef} justSavedTransaction={transactionForm.justSavedTransaction}
         onCreateSimilar={transactionForm.handleCreateSimilar} onClose={transactionForm.closeDialog}
-        onSubmit={handlers.handleSubmit} isMutationPending={handlers.isMutationPending}
       />
 
       {/* Confirmation Dialog */}

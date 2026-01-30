@@ -59,6 +59,9 @@ export function useCategorySuggestion({
   });
 
   const suggestion = useMemo<CategorySuggestion | null>(() => {
+    // Programação defensiva: verificar se description existe e é string
+    if (!description || typeof description !== 'string') return null;
+    
     const trimmedDesc = description.trim().toLowerCase();
     
     // Only suggest when description has at least 3 characters

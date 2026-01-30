@@ -56,7 +56,8 @@
     "error": "Error al procesar",
     "visible": "Visible",
     "hidden": "Oculto",
-    "noResults": "No se encontraron resultados"
+    "noResults": "No se encontraron resultados",
+    "comingSoon": "Próximamente"
   },
   "trash": {
     "emptyTrash": "Vaciar Papelera",
@@ -116,6 +117,8 @@
       "network": "Error de conexión. Inténtalo de nuevo.",
       "generic": "No se pudo completar. Inténtalo de nuevo."
     },
+    "continueWithGoogle": "Continuar con Google",
+    "orContinueWith": "o continuar con",
     "passwordPolicy": "La contraseña debe tener al menos 8 caracteres e incluir mayúscula, minúscula, número y símbolo.",
     "passwordLeaked": "Esta contraseña apareció en filtraciones. Elige una diferente."
   },
@@ -132,7 +135,7 @@
     "income": "Ingresos",
     "expenses": "Gastos",
     "confirmedInMonth": "Confirmados este mes",
-    "balance": "Saldo disponible",
+    "balance": "Saldo (mes)",
     "balanceSubtitle": "(Ingresos − Gastos) ajustado por Reservas",
     "balanceTooltip": "Saldo del mes considerando transferencias a/de cuentas de reserva. Transferir a reserva reduce el saldo disponible.",
     "monthBalance": "Saldo del Mes",
@@ -790,6 +793,8 @@
       "recurring_late_payment_title": "Cuenta suele atrasarse",
       "missing_recurring_expense": "Sueles tener este gasto este mes.\n¿Todavía va a ocurrir?",
       "missing_recurring_expense_title": "Gasto recurrente no registrado",
+      "expense_due_today": "{{description}} vence hoy. Valor: {{amount}}",
+      "expense_due_today_title": "Cuenta vence hoy",
       "generic": "Notificación"
     },
     "payment_delayed": {
@@ -832,6 +837,23 @@
     "missing_recurring_expense": {
       "title": "Gasto recurrente no registrado",
       "message": "Sueles tener este gasto este mes.\n¿Todavía va a ocurrir?"
+    },
+    "simulator": {
+      "title": "Simulador de Notificaciones",
+      "description": "Prueba cómo las notificaciones bancarias serían recibidas y parseadas por la app",
+      "enableNotifications": "Recibir notificaciones bancarias",
+      "autoParse": "Crear transacciones automáticamente",
+      "quickTemplates": "Plantillas rápidas",
+      "customNotification": "Notificación personalizada",
+      "titlePlaceholder": "Título de la notificación",
+      "messagePlaceholder": "Mensaje (usa {amount} para el valor)",
+      "amountPlaceholder": "Valor (ej: 150,00)",
+      "amountHint": "Usa {amount} en el mensaje para insertar el valor formateado",
+      "send": "Enviar",
+      "fillFields": "Completa título y mensaje",
+      "parseAction": "Crear transacción",
+      "parsed": "Transacción identificada",
+      "transactionCreated": "Se creó una nueva transacción basada en esta notificación"
     }
   },
   "toasts": {
@@ -987,6 +1009,7 @@
     "future": "Futuro",
     "toPay": "Por pagar",
     "paid": "Pagado",
+    "pendingCount": "{{count}} pendiente(s)",
     "monthUnderControl": "Mes bajo control ✓",
     "riskCloseInRed": "Atención: riesgo de cerrar en rojo",
     "noPending": "Ninguna cuenta pendiente 🎉",
@@ -1241,7 +1264,8 @@
       "awaitingAuthorization": "Esperando autorización del banco",
       "connectionRevoked": "Conexión revocada con éxito",
       "error": "Error de conexión"
-    }
+    },
+    "comingSoon": "Próximamente"
   },
   "onboarding": {
     "title": "¡Bienvenido a Locus Finanças!",
@@ -1268,6 +1292,99 @@
     "errors": {
       "nameRequired": "El nombre del hogar es obligatorio",
       "createFailed": "Error al crear hogar. Inténtalo de nuevo."
+    }
+  },
+  "fileImport": {
+    "title": "Importar transacciones",
+    "description": "Importa transacciones de extractos bancarios en formatos CSV u OFX.",
+    "processing": "Procesando archivo...",
+    "success": "¡Archivo procesado con éxito!",
+    "tryAgain": "Intentar de nuevo",
+    "dropHere": "Arrastra un archivo aquí",
+    "orClick": "o haz clic para seleccionar",
+    "selectAccount": "Seleccionar cuenta",
+    "selectAccountDescription": "Elige la cuenta donde se importarán las transacciones.",
+    "selectAccountPlaceholder": "Selecciona una cuenta",
+    "transactionsToImport": "transacciones serán importadas",
+    "importing": "Importando...",
+    "import": "Importar",
+    "mapping": {
+      "title": "Mapear columnas",
+      "subtitle": "Asocia las columnas del archivo con los campos de Locus",
+      "required": "Obligatorios",
+      "optional": "Opcionales",
+      "date": "Fecha",
+      "description": "Descripción",
+      "amount": "Valor",
+      "type": "Tipo (C/D)",
+      "category": "Categoría",
+      "selectColumn": "Selecciona columna",
+      "ignore": "Ignorar",
+      "preview": "Prévia de las primeras transacciones",
+      "confirm": "Confirmar e importar"
+    },
+    "summary": {
+      "successTitle": "¡Importación completada!",
+      "partialTitle": "Importación con advertencias",
+      "imported": "Importadas",
+      "skipped": "Omitidas",
+      "errors": "Errores",
+      "errorList": "Detalles de los errores",
+      "importMore": "Importar otro archivo"
+    },
+    "errors": {
+      "parseFailed": "Error al procesar archivo",
+      "noTransactions": "No se encontraron transacciones",
+      "mappingFailed": "Error al mapear columnas",
+      "importFailed": "Error al importar transacciones"
+    }
+  },
+  "quickAdd": {
+    "title": "Entrada rápida",
+    "descriptionPlaceholder": "Descripción (Enter para guardar)",
+    "selectAccount": "Cuenta",
+    "selectCategory": "Categoría (opcional)",
+    "hint": {
+      "tab": "siguiente campo",
+      "enter": "guardar"
+    },
+    "success": {
+      "expense": "¡Gasto registrado!",
+      "income": "¡Ingreso registrado!"
+    },
+    "errors": {
+      "invalidAmount": "Valor inválido",
+      "failed": "Error al guardar transacción"
+    }
+  },
+  "smartImport": {
+    "title": "Importación Inteligente",
+    "uploadDescription": "Arrastra un archivo CSV u OFX aquí o haz clic para seleccionar",
+    "reviewDescription": "Revisa las transacciones detectadas antes de importar",
+    "importingDescription": "Importando transacciones...",
+    "successDescription": "¡Importación completada con éxito!",
+    "dropzone": "Arrastra archivos aquí",
+    "supportedFormats": "Formatos soportados: CSV, OFX",
+    "noTransactionsFound": "No se encontraron transacciones en el archivo",
+    "parseError": "Error al procesar el archivo",
+    "transactions": "Transacciones",
+    "categorized": "Categorizadas",
+    "netPositive": "Neto positivo",
+    "netNegative": "Neto negativo",
+    "uncategorized": "Sin categorizar",
+    "confirmAll": "Confirmar todas",
+    "importing": "Importando...",
+    "successTitle": "¡Importación exitosa!",
+    "successMessage": "{{count}} transacciones importadas",
+    "learningMessage": "El sistema está aprendiendo tus patrones de gasto",
+    "noDefaultAccount": "Selecciona una cuenta por defecto",
+    "selectCategory": "Seleccionar categoría",
+    "searchCategory": "Buscar categoría...",
+    "confidence": {
+      "high": "Alta confianza",
+      "medium": "Confianza media",
+      "low": "Baja confianza",
+      "none": "Sin confianza"
     }
   }
 }

@@ -27,6 +27,7 @@ interface MobileSelectorProps {
   disabled?: boolean;
   searchPlaceholder?: string;
   emptyMessage?: string;
+  required?: boolean; // Se true, não permite desmarcar (toggle)
   'data-testid'?: string;
 }
 
@@ -40,6 +41,7 @@ export function MobileSelector({
   disabled,
   searchPlaceholder,
   emptyMessage,
+  required = false,
   'data-testid': dataTestId,
 }: MobileSelectorProps) {
   const { t } = useLocale();
@@ -65,7 +67,20 @@ export function MobileSelector({
   };
 
   const handleSelectItem = (itemId: string) => {
-    onSelect(itemId === value ? undefined : itemId);
+    console.log('[MobileSelector] Item selecionado:', { itemId, currentValue: value, required, willToggle: itemId === value && !required });
+    
+    // Se o campo é obrigatório e já está selecionado, não permitir desmarcar
+    if (required && itemId === value) {
+      console.log('[MobileSelector] Campo obrigatório - mantendo seleção:', itemId);
+      setOpen(false);
+      setSearchQuery('');
+      return;
+    }
+    
+    // Toggle apenas se não for obrigatório
+    const newValue = itemId === value ? undefined : itemId;
+    console.log('[MobileSelector] Chamando onSelect com:', newValue);
+    onSelect(newValue);
     setOpen(false);
     setSearchQuery('');
   };

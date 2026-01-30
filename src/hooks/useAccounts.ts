@@ -37,7 +37,7 @@ export function useAccounts() {
   const queryClient = useQueryClient();
 
   // ARCHITECTURE FIX: Use RPC to get balances calculated by Postgres
-  const { data: accountsWithBalances = [], isLoading } = useQuery({
+  const { data: accountsWithBalances = [], isLoading, refetch: refetchAccounts } = useQuery({
     queryKey: ['accounts', 'with-balances', householdId],
     queryFn: async () => {
       if (!householdId) return [];
@@ -323,6 +323,7 @@ export function useAccounts() {
   return {
     accounts: accountsWithBalances,
     isLoading,
+    refetchAccounts,
     createAccount,
     updateAccount,
     deleteAccount,

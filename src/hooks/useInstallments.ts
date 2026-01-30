@@ -101,16 +101,64 @@ export function useInstallments() {
   // Update installment(s)
   const updateInstallment = useMutation({
     mutationFn: async ({ id, scope, updates }: UpdateInstallmentScope) => {
+      // Sanitize amount if present in updates
+      const sanitizedUpdates = { ...updates };
+      if ('amount' in updates && updates.amount !== undefined) {
+        let sanitizedAmount: number;
+        if (typeof updates.amount === 'string') {
+          // Remove spaces and normalize
+          let cleaned = updates.amount.trim().replace(/\s/g, '');
+          
+          // Detect format: if comma appears after the last dot, it's pt-BR (comma is decimal)
+          const lastComma = cleaned.lastIndexOf(',');
+          const lastDot = cleaned.lastIndexOf('.');
+          
+          if (lastComma > lastDot) {
+            // pt-BR format: dots are thousand separators, comma is decimal
+            cleaned = cleaned.replace(/\./g, '').replace(',', '.');
+          } else if (lastDot > lastComma) {
+            // en-US format: commas are thousand separators, dot is decimal
+            cleaned = cleaned.replace(/,/g, '');
+          } else {
+            // Only one or none separators - treat comma as decimal
+            cleaned = cleaned.replace(',', '.');
+          }
+          
+          const parsed = parseFloat(cleaned);
+          if (isNaN(parsed)) {
+            throw new Error('Valor inválido. Por favor, insira um número válido.');
+          }
+          sanitizedAmount = Math.round(parsed * 100) / 100;
+        } else if (typeof updates.amount === 'number') {
+          sanitizedAmount = isNaN(updates.amount) ? 0 : updates.amount;
+        } else {
+          throw new Error('Valor inválido. Por favor, insira um número válido.');
+        }
+        
+        // Validate amount is positive
+        if (sanitizedAmount <= 0) {
+          throw new Error('O valor deve ser maior que zero.');
+        }
+        
+        sanitizedUpdates.amount = sanitizedAmount;
+      }
+      
+      // Debug log before sending to Supabase
+      console.log('[Installment Update] Payload:', { id, scope, updates: sanitizedUpdates });
+      
       if (scope === 'single') {
         // Update only this installment
         const { data, error } = await supabase
           .from('transactions')
-          .update(updates)
+          .update(sanitizedUpdates)
           .eq('id', id)
           .select()
           .single();
 
-        if (error) throw error;
+        if (error) {
+          console.error('[Installment Update Error]', { error, payload: sanitizedUpdates });
+          throw error;
+        }
         return data;
       } else {
         // Update this and all future installments
@@ -127,12 +175,15 @@ export function useInstallments() {
         // Update all installments with same group_id and installment_number >= current
         const { data, error } = await supabase
           .from('transactions')
-          .update(updates)
+          .update(sanitizedUpdates)
           .eq('installment_group_id', current.installment_group_id)
           .gte('installment_number', current.installment_number)
           .select();
 
-        if (error) throw error;
+        if (error) {
+          console.error('[Installment Update Error]', { error, payload: sanitizedUpdates });
+          throw error;
+        }
         return data;
       }
     },

@@ -171,8 +171,15 @@ export function useTransactions(filters: TransactionFilters = {}) {
       payment_method?: string | null;
       credit_card_id?: string | null;
       invoice_month?: string | null;
+      household_id?: string;
     }) => {
-      if (!householdId) throw new Error('No household');
+      console.log("1. Entrei no onSubmit");
+      
+      // Usar household_id do transaction se disponível, senão usar do contexto
+      const finalHouseholdId = (transaction as any).household_id || householdId;
+      console.log("2. Household ID capturado:", finalHouseholdId);
+      
+      if (!finalHouseholdId) throw new Error('No household');
 
       // Guardrail: confirmed transactions cannot be future-dated (prevents current balance corruption)
       const todayStr = format(new Date(), 'yyyy-MM-dd');
@@ -232,12 +239,50 @@ export function useTransactions(filters: TransactionFilters = {}) {
           ? (transaction.due_date || transaction.date)
           : transaction.date;
       
+      // Sanitize amount: ensure it's a valid number (handles string inputs with comma/dot separators)
+      let sanitizedAmount: number;
+      const amountValue = transaction.amount;
+      if (typeof amountValue === 'string') {
+        // Remove spaces and normalize
+        let cleaned = String(amountValue).trim().replace(/\s/g, '');
+        
+        // Detect format: if comma appears after the last dot, it's pt-BR (comma is decimal)
+        const lastComma = cleaned.lastIndexOf(',');
+        const lastDot = cleaned.lastIndexOf('.');
+        
+        if (lastComma > lastDot) {
+          // pt-BR format: dots are thousand separators, comma is decimal
+          cleaned = cleaned.replace(/\./g, '').replace(',', '.');
+        } else if (lastDot > lastComma) {
+          // en-US format: commas are thousand separators, dot is decimal
+          cleaned = cleaned.replace(/,/g, '');
+        } else {
+          // Only one or none separators - treat comma as decimal
+          cleaned = cleaned.replace(',', '.');
+        }
+        
+        const parsed = parseFloat(cleaned);
+        if (isNaN(parsed)) {
+          throw new Error('Valor inválido. Por favor, insira um número válido.');
+        }
+        sanitizedAmount = Math.round(parsed * 100) / 100;
+      } else if (typeof transaction.amount === 'number') {
+        sanitizedAmount = isNaN(transaction.amount) ? 0 : transaction.amount;
+      } else {
+        throw new Error('Valor inválido. Por favor, insira um número válido.');
+      }
+      
+      // Validate amount is positive
+      if (sanitizedAmount <= 0) {
+        throw new Error('O valor deve ser maior que zero.');
+      }
+      
       // Clean payload: remove undefined values and let DB trigger handle expense_type
       const cleanPayload: Record<string, unknown> = {
-        household_id: householdId,
+        household_id: finalHouseholdId,
         kind: transaction.kind,
         account_id: transaction.account_id,
-        amount: transaction.amount,
+        amount: sanitizedAmount,
         date: transaction.date,
         status,
         confirmed_at,
@@ -274,20 +319,39 @@ export function useTransactions(filters: TransactionFilters = {}) {
         cleanPayload.expense_type = transaction.expense_type;
       }
       
+      // Debug log before sending to Supabase
+      console.log('[Transaction Create] Payload:', cleanPayload);
       
-      const { data, error } = await supabase
-        .from('transactions')
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .insert(cleanPayload as any)
-        .select()
-        .single();
+      // ARQUITETURA RPC: Substituição do INSERT direto por RPC segura
+      console.log("⚡ Iniciando salvamento via RPC Seguro...");
       
-      if (error) {
-        // Log detailed error info for debugging
-        console.error('[Transaction Create Error]', { error, payload: cleanPayload });
-        throw error;
+      // RPC será criada no banco - usando type assertion temporário
+      const { data: rpcData, error: rpcError } = await (supabase.rpc as any)('create_transaction_secure', {
+        p_account_id: transaction.account_id,
+        p_category_id: transaction.category_id || null,
+        p_amount: sanitizedAmount,
+        p_date: transaction.date,
+        p_description: transaction.description || null,
+        p_kind: transaction.kind,
+        p_payment_method: transaction.kind === 'INCOME' ? null : transaction.payment_method || null,
+        p_to_account_id: transaction.to_account_id || null,
+        p_subcategory_id: transaction.subcategory_id || null,
+        p_member_id: transaction.member_id || null,
+        p_status: status || 'confirmed',
+        p_expense_type: transaction.expense_type || null,
+        p_due_date: due_date || null,
+        p_credit_card_id: transaction.credit_card_id || null,
+        p_invoice_month: transaction.invoice_month || null,
+      });
+
+      if (rpcError) {
+        console.error("❌ Erro na RPC:", rpcError);
+        throw rpcError;
       }
-      return data;
+      console.log("✅ Transação salva com sucesso via RPC:", rpcData);
+      
+      // Retornar dados da RPC (que já contém o registro completo)
+      return rpcData as any;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['transactions'] });
@@ -301,14 +365,63 @@ export function useTransactions(filters: TransactionFilters = {}) {
 
   const updateTransaction = useMutation({
     mutationFn: async ({ id, ...updates }: Partial<Transaction> & { id: string }) => {
+      // Sanitize amount if present in updates
+      const sanitizedUpdates = { ...updates };
+      if ('amount' in updates && updates.amount !== undefined) {
+        let sanitizedAmount: number;
+        const amountValue = updates.amount as string | number;
+        if (typeof amountValue === 'string') {
+          // Remove spaces and normalize
+          let cleaned = amountValue.trim().replace(/\s/g, '');
+          
+          // Detect format: if comma appears after the last dot, it's pt-BR (comma is decimal)
+          const lastComma = cleaned.lastIndexOf(',');
+          const lastDot = cleaned.lastIndexOf('.');
+          
+          if (lastComma > lastDot) {
+            // pt-BR format: dots are thousand separators, comma is decimal
+            cleaned = cleaned.replace(/\./g, '').replace(',', '.');
+          } else if (lastDot > lastComma) {
+            // en-US format: commas are thousand separators, dot is decimal
+            cleaned = cleaned.replace(/,/g, '');
+          } else {
+            // Only one or none separators - treat comma as decimal
+            cleaned = cleaned.replace(',', '.');
+          }
+          
+          const parsed = parseFloat(cleaned);
+          if (isNaN(parsed)) {
+            throw new Error('Valor inválido. Por favor, insira um número válido.');
+          }
+          sanitizedAmount = Math.round(parsed * 100) / 100;
+        } else if (typeof updates.amount === 'number') {
+          sanitizedAmount = isNaN(updates.amount) ? 0 : updates.amount;
+        } else {
+          throw new Error('Valor inválido. Por favor, insira um número válido.');
+        }
+        
+        // Validate amount is positive
+        if (sanitizedAmount <= 0) {
+          throw new Error('O valor deve ser maior que zero.');
+        }
+        
+        sanitizedUpdates.amount = sanitizedAmount;
+      }
+      
+      // Debug log before sending to Supabase
+      console.log('[Transaction Update] Payload:', { id, ...sanitizedUpdates });
+      
       const { data, error } = await supabase
         .from('transactions')
-        .update(updates)
+        .update(sanitizedUpdates)
         .eq('id', id)
         .select()
         .single();
       
-      if (error) throw error;
+      if (error) {
+        console.error('[Transaction Update Error]', { error, payload: sanitizedUpdates });
+        throw error;
+      }
       
       // If due_date was updated, recalculate payment delayed notifications
       // This handles the case where an overdue transaction's due date is moved to the future

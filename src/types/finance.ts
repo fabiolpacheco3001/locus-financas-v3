@@ -45,6 +45,7 @@ export interface Category {
   archived_at: string | null;
   created_at: string;
   updated_at: string;
+  type?: 'income' | 'expense' | string;
   subcategories?: Subcategory[];
 }
 
