@@ -98,6 +98,8 @@ export function useAccountProjections(selectedMonth: Date) {
       is_active: a.is_active,
       name: a.name,
       type: a.type,
+      current_balance: a.current_balance,
+      initial_balance: a.initial_balance,
     }));
     
     // Use unified calculation

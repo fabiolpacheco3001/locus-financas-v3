@@ -92,12 +92,25 @@ export function useAccounts() {
       return result;
     },
     enabled: !!householdId,
-    staleTime: 1000 * 60 * 5, // Cache for 5 minutes to reduce DB calls
+    staleTime: 1000 * 60 * 2, // 2 minutes - accounts balance changes frequently
+    gcTime: 1000 * 60 * 10, // 10 minutes - keep in memory for quick access
   });
 
   const createAccount = useMutation({
     mutationFn: async (account: { name: string; type: AccountType; initial_balance?: number; initial_balance_date?: Date }) => {
       if (!householdId) throw new Error('No household');
+      
+      // Ensure initial_balance is a valid number
+      const initialBalance = Number(account.initial_balance) || 0;
+      
+      // Debug: Log payload before insert
+      const payload = {
+        name: account.name,
+        type: account.type,
+        household_id: householdId,
+        initial_balance: initialBalance,
+      };
+      console.log('Payload antes do insert:', payload);
       
       // Create the account first
       const { data: newAccount, error } = await supabase
@@ -106,6 +119,7 @@ export function useAccounts() {
           name: account.name,
           type: account.type,
           household_id: householdId,
+          initial_balance: initialBalance,
         })
         .select()
         .single();
@@ -113,7 +127,6 @@ export function useAccounts() {
       if (error) throw error;
       
       // If there's an initial balance, create an INCOME transaction
-      const initialBalance = account.initial_balance || 0;
       if (initialBalance > 0) {
         const balanceDate = account.initial_balance_date || new Date();
         const firstDayOfMonth = format(startOfMonth(balanceDate), 'yyyy-MM-dd');
@@ -273,7 +286,7 @@ export function useAccounts() {
       );
       
       if (balanceError) {
-        
+        console.warn('[ForceSync] Failed to fetch new balance after sync:', balanceError);
       }
       
       const newBalance = Number(newBalanceData) || 0;

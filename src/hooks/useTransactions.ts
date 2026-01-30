@@ -149,7 +149,9 @@ export function useTransactions(filters: TransactionFilters = {}) {
       // Cast needed because members table no longer has user_id column (moved to member_identities)
       return data as unknown as Transaction[];
     },
-    enabled: !!householdId
+    enabled: !!householdId,
+    staleTime: 1000 * 60 * 2, // 2 minutes - transactions change frequently
+    gcTime: 1000 * 60 * 10, // 10 minutes - keep in memory for quick access
   });
 
   const createTransaction = useMutation({

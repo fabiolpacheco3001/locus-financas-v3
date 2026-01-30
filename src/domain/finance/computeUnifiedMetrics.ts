@@ -42,6 +42,10 @@ export interface AccountForMetrics {
   is_active: boolean;
   name: string;
   type: string;
+  /** Current balance of the account (saldo atual) - used as base for calculations */
+  current_balance?: number;
+  /** Initial balance of the account (saldo inicial) - fallback if current_balance is not available */
+  initial_balance?: number;
 }
 
 export interface UnifiedMonthlyMetrics {
@@ -286,7 +290,13 @@ export function computeUnifiedAccountMetrics(
   
 
   const projections: UnifiedAccountMetrics[] = accounts.map(account => {
-    let realizedBalance = 0;
+    // Use current_balance directly as realizedBalance for active accounts
+    // This ensures accounts without transactions still show their balance correctly
+    // The current_balance already includes all confirmed transactions calculated by the database
+    const realizedBalance = account.is_active 
+      ? (account.current_balance ?? account.initial_balance ?? 0)
+      : 0;
+    
     let pendingIncome = 0;
     let pendingExpenses = 0;
     let transactionCount = 0;
@@ -298,28 +308,12 @@ export function computeUnifiedAccountMetrics(
       const effectiveDate = getEffectiveDate(t);
       const effectiveDateParsed = parseISO(effectiveDate);
       const isWithinProjectionPeriod = effectiveDateParsed <= endOfSelectedMonth;
-      // Use end-of-month cutoff instead of "today" to include all current month transactions
-      const isWithinCurrentMonth = effectiveDate <= endOfMonthCutoffStr;
       
-      // ACCOUNT BALANCE: Confirmed transactions with effective_date <= end of current month
-      // This avoids timezone issues while still excluding future-month recurrences
-      if (t.status === 'confirmed' && isWithinCurrentMonth) {
-        if (t.kind === 'INCOME' && t.account_id === account.id) {
-          realizedBalance += amount;
-          transactionCount++;
-        } else if (t.kind === 'EXPENSE' && t.account_id === account.id) {
-          realizedBalance -= amount;
-          transactionCount++;
-        } else if (t.kind === 'TRANSFER') {
-          if (t.account_id === account.id) {
-            realizedBalance -= amount;
-            transactionCount++;
-          }
-          if (t.to_account_id === account.id) {
-            realizedBalance += amount;
-            transactionCount++;
-          }
-        }
+      // Count transactions for the account (for display purposes)
+      // Note: We don't recalculate realizedBalance from transactions because
+      // current_balance already includes all confirmed transactions
+      if (t.status === 'confirmed' && (t.account_id === account.id || t.to_account_id === account.id)) {
+        transactionCount++;
       }
       
       // PENDING: STRICTLY status === 'planned' only (status-based logic)

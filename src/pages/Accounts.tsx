@@ -79,7 +79,7 @@ export default function AccountsPage() {
     
     try {
       if (editingId) {
-        const newInitialBalance = parseFloat(formInitialBalance.replace(',', '.')) || 0;
+        const newInitialBalance = Number(formInitialBalance.replace(',', '.')) || 0;
         await updateAccount.mutateAsync({ 
           id: editingId, 
           name: formName,
@@ -88,10 +88,11 @@ export default function AccountsPage() {
           initial_balance: newInitialBalance,
         } as Parameters<typeof updateAccount.mutateAsync>[0]);
       } else {
+        const initialBalanceValue = Number(formBalance.replace(',', '.')) || 0;
         await createAccount.mutateAsync({
           name: formName,
           type: formType,
-          initial_balance: parseFloat(formBalance.replace(',', '.')) || 0,
+          initial_balance: initialBalanceValue,
           initial_balance_date: new Date(),
         });
       }
