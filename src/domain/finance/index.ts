@@ -69,8 +69,11 @@ export {
   computeFutureEngine,
   calculateDaysRemaining,
   calculateDaysElapsed,
+  calculateHistoricalAverage,
   type FutureEngineInput,
   type FutureEngineResult,
+  type HistoricalTransaction,
+  type HistoricalAverageResult,
 } from './computeFutureEngine';
 
 // Logger (for debugging)

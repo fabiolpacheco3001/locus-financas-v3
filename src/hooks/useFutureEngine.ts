@@ -1,7 +1,8 @@
 /**
- * useFutureEngine - Hook for end-of-month balance projection
+ * useFutureEngine - Hook para projeção de saldo ao final do mês
  * 
- * Fetches historical data, computes projections, and returns memoized results.
+ * Busca dados históricos, calcula projeções e retorna resultados memoizados.
+ * Inclui fallback para orçamento planejado quando não há histórico suficiente.
  */
 
 import { useMemo } from 'react';
@@ -12,7 +13,9 @@ import {
   computeFutureEngine, 
   calculateDaysElapsed,
   calculateDaysRemaining,
-  type FutureEngineResult 
+  calculateHistoricalAverage,
+  type FutureEngineResult,
+  type HistoricalTransaction,
 } from '@/domain/finance/computeFutureEngine';
 import { 
   startOfMonth, 
@@ -24,31 +27,31 @@ import {
 } from 'date-fns';
 
 // ============================================
-// TYPES
+// TIPOS
 // ============================================
 
 export interface UseFutureEngineOptions {
-  /** Currently selected month */
+  /** Mês atualmente selecionado */
   selectedMonth: Date;
   
-  /** Current available balance (from useAccountProjections) */
+  /** Saldo disponível atual (de useAccountProjections) */
   currentBalance: number;
   
-  /** Pending fixed expenses for the month */
+  /** Despesas fixas pendentes para o mês */
   pendingFixedExpenses: number;
   
-  /** Confirmed variable expenses this month */
+  /** Despesas variáveis confirmadas neste mês */
   confirmedVariableThisMonth: number;
 }
 
 export interface UseFutureEngineResult extends FutureEngineResult {
-  /** Is data still loading */
+  /** Se os dados ainda estão carregando */
   isLoading: boolean;
   
-  /** Historical average of variable expenses (3 months) */
+  /** Média histórica de despesas variáveis (3 meses) */
   historicalVariableAvg: number;
   
-  /** Number of historical months with data */
+  /** Número de meses históricos com dados */
   historicalMonthsCount: number;
 }
 
@@ -56,11 +59,22 @@ export interface UseFutureEngineResult extends FutureEngineResult {
 // HOOK
 // ============================================
 
+/**
+ * Hook para calcular projeção de saldo ao final do mês
+ * 
+ * Busca dados históricos dos últimos 3 meses e calcula projeções usando:
+ * - Média histórica de despesas variáveis
+ * - Fallback para orçamento planejado quando não há histórico
+ * - Cálculo preciso de dias restantes usando dateOnly
+ * 
+ * @param options - Opções de configuração do hook
+ * @returns Resultado da projeção com dados históricos e status de carregamento
+ */
 export function useFutureEngine(options: UseFutureEngineOptions): UseFutureEngineResult {
   const { selectedMonth, currentBalance, pendingFixedExpenses, confirmedVariableThisMonth } = options;
   const { householdId } = useAuth();
 
-  // Calculate date range for historical query (last 3 months, excluding current)
+  // Calcula intervalo de datas para query histórica (últimos 3 meses, excluindo atual)
   const historicalRange = useMemo(() => {
     const endDate = endOfMonth(subMonths(selectedMonth, 1));
     const startDate = startOfMonth(subMonths(selectedMonth, 3));
@@ -70,15 +84,17 @@ export function useFutureEngine(options: UseFutureEngineOptions): UseFutureEngin
     };
   }, [selectedMonth]);
 
-  // Fetch historical variable expenses (last 3 months)
-  const { data: historicalData, isLoading } = useQuery({
+  // Busca despesas variáveis históricas (últimos 3 meses)
+  const { data: historicalData, isLoading: isLoadingHistory } = useQuery({
     queryKey: ['future-engine-history', householdId, historicalRange.start, historicalRange.end],
-    queryFn: async () => {
-      if (!householdId) return [];
+    queryFn: async (): Promise<HistoricalTransaction[]> => {
+      if (!householdId) {
+        return [];
+      }
 
       const { data, error } = await supabase
         .from('transactions')
-        .select('id, amount, date, status, expense_type')
+        .select('amount, date')
         .eq('household_id', householdId)
         .eq('kind', 'EXPENSE')
         .eq('status', 'confirmed')
@@ -88,44 +104,63 @@ export function useFutureEngine(options: UseFutureEngineOptions): UseFutureEngin
         .is('cancelled_at', null);
 
       if (error) {
-        console.error('Error fetching historical data:', error);
+        console.error('Erro ao buscar dados históricos:', error);
+        return [];
+      }
+
+      // Converte para formato esperado pela função de domínio
+      return (data || []).map((tx) => ({
+        date: tx.date,
+        amount: Number(tx.amount),
+      }));
+    },
+    enabled: !!householdId,
+    staleTime: 5 * 60 * 1000, // 5 minutos
+  });
+
+  // Calcula ano e mês para buscar orçamento planejado
+  const budgetYear = selectedMonth.getFullYear();
+  const budgetMonth = selectedMonth.getMonth() + 1;
+
+  // Busca orçamento planejado para o mês (fallback quando não há histórico)
+  const { data: budgets = [], isLoading: isLoadingBudgets } = useQuery({
+    queryKey: ['future-engine-budgets', householdId, budgetYear, budgetMonth],
+    queryFn: async () => {
+      if (!householdId) {
+        return [];
+      }
+
+      const { data, error } = await supabase
+        .from('budgets')
+        .select('planned_amount')
+        .eq('household_id', householdId)
+        .eq('year', budgetYear)
+        .eq('month', budgetMonth);
+
+      if (error) {
+        console.error('Erro ao buscar orçamentos:', error);
         return [];
       }
 
       return data || [];
     },
     enabled: !!householdId,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000, // 5 minutos
   });
 
-  // Calculate historical average
-  const { historicalVariableAvg, historicalMonthsCount } = useMemo(() => {
-    if (!historicalData || historicalData.length === 0) {
-      return { historicalVariableAvg: 0, historicalMonthsCount: 0 };
-    }
+  // Calcula total de orçamento planejado (soma de todos os budgets)
+  // Nota: Idealmente deveria filtrar apenas budgets de despesas variáveis,
+  // mas como não há essa informação direta, usamos o total como fallback
+  const plannedBudgetVariable = useMemo(() => {
+    return budgets.reduce((sum, budget) => sum + Number(budget.planned_amount), 0);
+  }, [budgets]);
 
-    // Group by month and calculate totals
-    const monthlyTotals: Record<string, number> = {};
-    
-    historicalData.forEach((tx) => {
-      const monthKey = tx.date.substring(0, 7); // YYYY-MM
-      if (!monthlyTotals[monthKey]) {
-        monthlyTotals[monthKey] = 0;
-      }
-      monthlyTotals[monthKey] += Number(tx.amount);
-    });
-
-    const months = Object.keys(monthlyTotals);
-    const totalVariable = Object.values(monthlyTotals).reduce((sum, val) => sum + val, 0);
-    const avgVariable = months.length > 0 ? totalVariable / months.length : 0;
-
-    return {
-      historicalVariableAvg: avgVariable,
-      historicalMonthsCount: months.length,
-    };
+  // Calcula média histórica usando função pura do domínio
+  const { average: historicalVariableAvg, monthsCount: historicalMonthsCount } = useMemo(() => {
+    return calculateHistoricalAverage(historicalData || []);
   }, [historicalData]);
 
-  // Calculate time-based inputs
+  // Calcula entradas baseadas em tempo
   const { daysElapsed, daysInMonth, daysRemaining } = useMemo(() => {
     const today = new Date();
     const isCurrentMonth = isSameMonth(selectedMonth, today);
@@ -133,7 +168,7 @@ export function useFutureEngine(options: UseFutureEngineOptions): UseFutureEngin
     const totalDays = getDaysInMonth(selectedMonth);
     
     if (!isCurrentMonth) {
-      // For past/future months, show full month projection
+      // Para meses passados/futuros, mostra projeção do mês completo
       return {
         daysElapsed: totalDays,
         daysInMonth: totalDays,
@@ -148,7 +183,7 @@ export function useFutureEngine(options: UseFutureEngineOptions): UseFutureEngin
     };
   }, [selectedMonth]);
 
-  // Compute future engine projection
+  // Calcula projeção do future engine
   const projection = useMemo(() => {
     return computeFutureEngine({
       currentBalance,
@@ -157,6 +192,7 @@ export function useFutureEngine(options: UseFutureEngineOptions): UseFutureEngin
       historicalVariableAvg,
       daysElapsed,
       daysInMonth,
+      plannedBudgetVariable,
     });
   }, [
     currentBalance,
@@ -165,7 +201,10 @@ export function useFutureEngine(options: UseFutureEngineOptions): UseFutureEngin
     historicalVariableAvg,
     daysElapsed,
     daysInMonth,
+    plannedBudgetVariable,
   ]);
+
+  const isLoading = isLoadingHistory || isLoadingBudgets;
 
   return {
     ...projection,

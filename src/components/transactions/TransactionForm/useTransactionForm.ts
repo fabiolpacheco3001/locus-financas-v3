@@ -244,10 +244,14 @@ export function useTransactionForm({
       finalCategoryId = defaultCategory;
     }
 
-    let status: TransactionStatus = 'confirmed';
-    if (validatedData.kind === 'EXPENSE') {
-        if (validatedData.payment_method === 'credit_card') status = 'confirmed';
-        else if (validatedData.date > format(new Date(), 'yyyy-MM-dd') || validatedData.status === 'planned') status = 'planned';
+    // Lógica de Status: O valor do formulário (controlado pelo toggle) é SOBERANO.
+    // Se o usuário marcou 'planned', respeitamos. Se marcou 'confirmed', respeitamos.
+    // O fallback para 'confirmed' só acontece se não houver definição explícita.
+    let status: TransactionStatus = validatedData.status || (validatedData.kind === 'EXPENSE' && validatedData.date > format(new Date(), 'yyyy-MM-dd') ? 'planned' : 'confirmed');
+
+    // Regra de Negócio: Receitas futuras também podem ser pendentes, mas por padrão confirmadas se hoje
+    if (validatedData.kind === 'INCOME') {
+      status = validatedData.status || 'confirmed';
     }
 
     // Sanitização do Payment Method (AQUI ESTÁ O SEGREDO)
@@ -266,7 +270,9 @@ export function useTransactionForm({
       member_id: validatedData.member_id,
       status,
       expense_type: validatedData.expense_type || (validatedData.kind === 'EXPENSE' ? 'variable' : null),
-      due_date: null, // Simplificado
+      // Se não houver due_date explícito (ex: parcelamento), assume a data da transação como vencimento.
+      // Isso garante que apareça no Dashboard e Radar.
+      due_date: validatedData.due_date || validatedData.date,
       payment_method: finalPaymentMethod, // <--- Aqui garantimos o null para receitas
       credit_card_id: validatedData.credit_card_id,
       invoice_month: null,
@@ -285,7 +291,8 @@ export function useTransactionForm({
         p_date: formData.date,
         p_description: formData.description,
         p_kind: formData.kind,
-        p_payment_method: formData.payment_method
+        p_payment_method: formData.payment_method,
+        p_status: formIsPlanned ? 'planned' : 'confirmed'
       });
 
       if (error) {

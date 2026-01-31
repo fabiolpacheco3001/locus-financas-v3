@@ -1,110 +1,218 @@
 /**
- * computeFutureEngine - Pure function for end-of-month balance projection
+ * computeFutureEngine - Função pura para projeção de saldo ao final do mês
  * 
- * Formula: estimatedEndOfMonth = currentBalance - pendingFixedExpenses - estimatedVariableSpending
+ * Fórmula: estimatedEndOfMonth = currentBalance - pendingFixedExpenses - estimatedVariableSpending
  * 
- * NO side effects, NO React dependencies - this is a pure domain function.
+ * SEM efeitos colaterais, SEM dependências React - esta é uma função pura de domínio.
  */
 
-import { getDaysInMonth, differenceInDays, endOfMonth, startOfDay } from 'date-fns';
+import { getDaysInMonth, endOfMonth } from 'date-fns';
+import { parseDateOnly, formatLocalDateOnly } from '@/lib/dateOnly';
 
 // ============================================
-// INPUT/OUTPUT TYPES
+// TIPOS DE ENTRADA/SAÍDA
 // ============================================
 
+/**
+ * Interface para transação histórica utilizada no cálculo de média
+ */
+export interface HistoricalTransaction {
+  /** Data da transação no formato YYYY-MM-DD */
+  date: string;
+  /** Valor da transação */
+  amount: number;
+}
+
+/**
+ * Parâmetros de entrada para o cálculo de projeção financeira
+ */
 export interface FutureEngineInput {
-  /** Current available balance (excludes reserves) */
+  /** Saldo atual disponível (exclui reservas) */
   currentBalance: number;
   
-  /** Fixed expenses with status='planned' for this month */
+  /** Despesas fixas com status='planned' para este mês */
   pendingFixedExpenses: number;
   
-  /** Variable expenses already confirmed this month */
+  /** Despesas variáveis já confirmadas neste mês */
   confirmedVariableThisMonth: number;
   
-  /** Historical average of monthly variable expenses (last 3 months) */
+  /** Média histórica de despesas variáveis mensais (últimos 3 meses) */
   historicalVariableAvg: number;
   
-  /** Number of days elapsed in the current month */
+  /** Número de dias transcorridos no mês atual */
   daysElapsed: number;
   
-  /** Total days in the current month */
+  /** Total de dias no mês atual */
   daysInMonth: number;
   
-  /** Optional safety buffer percentage (default: 10%) */
+  /** Percentual opcional de margem de segurança (padrão: 10%) */
   safetyBufferPercent?: number;
+  
+  /** Valor planejado de orçamento para despesas variáveis (fallback quando não há histórico) */
+  plannedBudgetVariable: number;
 }
 
+/**
+ * Resultado da projeção financeira
+ */
 export interface FutureEngineResult {
-  // Core projections
-  /** Estimated balance at end of month */
+  // Projeções principais
+  /** Saldo estimado ao final do mês */
   estimatedEndOfMonth: number;
   
-  /** Amount available to spend safely (with buffer) */
+  /** Valor disponível para gastar com segurança (com margem de segurança) */
   safeSpendingZone: number;
   
-  // Risk indicators
-  /** Risk classification based on projected balance */
+  // Indicadores de risco
+  /** Classificação de risco baseada no saldo projetado */
   riskLevel: 'safe' | 'caution' | 'danger';
   
-  /** Percentage for progress bar (0-100, clamped) */
+  /** Percentual para barra de progresso (0-100, limitado) */
   riskPercentage: number;
   
-  // Breakdown details
-  /** Projected remaining variable spending for the month */
+  // Detalhes do breakdown
+  /** Projeção de gastos variáveis restantes para o mês */
   projectedVariableRemaining: number;
   
-  /** Total projected expenses (fixed pending + projected variable) */
+  /** Total de despesas projetadas (fixas pendentes + variáveis projetadas) */
   totalProjectedExpenses: number;
   
-  /** Days remaining in the month */
+  /** Dias restantes no mês */
   daysRemaining: number;
   
-  // Metadata
-  /** Whether there's sufficient historical data for reliable projection */
+  // Metadados
+  /** Se há dados históricos suficientes para projeção confiável */
   isDataSufficient: boolean;
   
-  /** Confidence level of the projection */
+  /** Nível de confiança da projeção */
   confidenceLevel: 'high' | 'medium' | 'low';
+  
+  /** Se está usando fallback de orçamento planejado */
+  usingBudgetFallback: boolean;
+}
+
+/**
+ * Resultado do cálculo de média histórica
+ */
+export interface HistoricalAverageResult {
+  /** Média mensal calculada */
+  average: number;
+  
+  /** Número de meses com dados históricos */
+  monthsCount: number;
+  
+  /** Total de despesas variáveis nos meses analisados */
+  totalAmount: number;
 }
 
 // ============================================
-// HELPER FUNCTIONS
+// FUNÇÕES AUXILIARES
 // ============================================
 
 /**
- * Calculate days remaining in the month
+ * Calcula os dias restantes no mês usando dateOnly para evitar problemas de fuso horário
+ * 
+ * Usa dateOnly para garantir que anos bissextos e fusos horários sejam tratados corretamente.
+ * 
+ * @param selectedMonth - Mês selecionado para cálculo
+ * @param referenceDate - Data de referência (padrão: hoje)
+ * @returns Número de dias restantes no mês (incluindo o dia de referência)
  */
 export function calculateDaysRemaining(selectedMonth: Date, referenceDate: Date = new Date()): number {
-  const today = startOfDay(referenceDate);
-  const monthEnd = endOfMonth(selectedMonth);
+  // Usa dateOnly para evitar problemas de fuso horário
+  const referenceDateOnly = formatLocalDateOnly(referenceDate);
+  const parsedReference = parseDateOnly(referenceDateOnly);
   
-  const daysRemaining = differenceInDays(monthEnd, today);
-  return Math.max(0, daysRemaining + 1); // +1 to include today
+  const monthEnd = endOfMonth(selectedMonth);
+  const monthEndOnly = formatLocalDateOnly(monthEnd);
+  const parsedMonthEnd = parseDateOnly(monthEndOnly);
+  
+  // Calcula diferença em dias usando datas locais (sem fuso horário)
+  // Usa getTime() para calcular diferença em milissegundos e converter para dias
+  const referenceTime = parsedReference.getTime();
+  const monthEndTime = parsedMonthEnd.getTime();
+  
+  // Diferença em milissegundos convertida para dias
+  const diffMs = monthEndTime - referenceTime;
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  
+  // Retorna pelo menos 0, e inclui o dia de referência (+1)
+  return Math.max(0, diffDays + 1);
 }
 
 /**
- * Calculate days elapsed in the month
+ * Calcula os dias transcorridos no mês usando dateOnly para evitar problemas de fuso horário
+ * 
+ * @param selectedMonth - Mês selecionado para cálculo
+ * @param referenceDate - Data de referência (padrão: hoje)
+ * @returns Número de dias transcorridos no mês (mínimo 1)
  */
 export function calculateDaysElapsed(selectedMonth: Date, referenceDate: Date = new Date()): number {
-  const today = startOfDay(referenceDate);
   const daysInMonth = getDaysInMonth(selectedMonth);
   const daysRemaining = calculateDaysRemaining(selectedMonth, referenceDate);
   
+  // Garante que pelo menos 1 dia foi transcorrido
   return Math.max(1, daysInMonth - daysRemaining + 1);
 }
 
+/**
+ * Calcula a média histórica de despesas variáveis dos últimos 3 meses
+ * 
+ * Esta é uma função pura que agrupa transações por mês e calcula a média mensal.
+ * 
+ * @param transactions - Array de transações históricas
+ * @returns Resultado com média, número de meses e total
+ */
+export function calculateHistoricalAverage(
+  transactions: HistoricalTransaction[]
+): HistoricalAverageResult {
+  if (!transactions || transactions.length === 0) {
+    return {
+      average: 0,
+      monthsCount: 0,
+      totalAmount: 0,
+    };
+  }
+
+  // Agrupa por mês (YYYY-MM)
+  const monthlyTotals: Record<string, number> = {};
+  
+  transactions.forEach((tx) => {
+    // Extrai YYYY-MM da data (primeiros 7 caracteres)
+    const monthKey = tx.date.substring(0, 7);
+    if (!monthlyTotals[monthKey]) {
+      monthlyTotals[monthKey] = 0;
+    }
+    monthlyTotals[monthKey] += Number(tx.amount);
+  });
+
+  const months = Object.keys(monthlyTotals);
+  const totalAmount = Object.values(monthlyTotals).reduce((sum, val) => sum + val, 0);
+  const average = months.length > 0 ? totalAmount / months.length : 0;
+
+  return {
+    average,
+    monthsCount: months.length,
+    totalAmount,
+  };
+}
+
 // ============================================
-// MAIN FUNCTION
+// FUNÇÃO PRINCIPAL
 // ============================================
 
 /**
- * Compute end-of-month balance projection
+ * Calcula a projeção de saldo ao final do mês
  * 
- * Uses a daily rate model for variable expenses:
- * - Calculate daily variable rate from historical average
- * - Project remaining variable spending based on days left
- * - Subtract fixed pending expenses and projected variable from current balance
+ * Usa um modelo de taxa diária para despesas variáveis:
+ * - Calcula taxa diária variável a partir da média histórica
+ * - Projeta gastos variáveis restantes baseado nos dias restantes
+ * - Subtrai despesas fixas pendentes e variáveis projetadas do saldo atual
+ * 
+ * Se não houver histórico suficiente, usa o orçamento planejado como fallback.
+ * 
+ * @param input - Parâmetros de entrada para o cálculo
+ * @returns Resultado da projeção financeira
  */
 export function computeFutureEngine(input: FutureEngineInput): FutureEngineResult {
   const {
@@ -115,27 +223,37 @@ export function computeFutureEngine(input: FutureEngineInput): FutureEngineResul
     daysElapsed,
     daysInMonth,
     safetyBufferPercent = 10,
+    plannedBudgetVariable,
   } = input;
 
-  // Calculate days remaining
+  // Calcula dias restantes
   const daysRemaining = Math.max(0, daysInMonth - daysElapsed);
 
-  // Calculate projected variable spending for remaining days
-  // Using historical daily rate: (average / days in month) * days remaining
-  const dailyVariableRate = daysInMonth > 0 ? historicalVariableAvg / daysInMonth : 0;
+  // Determina se há dados históricos suficientes
+  const hasHistoricalData = historicalVariableAvg > 0;
+  const usingBudgetFallback = !hasHistoricalData && plannedBudgetVariable > 0;
+  
+  // Escolhe a fonte de dados: histórico ou orçamento planejado (fallback)
+  const effectiveVariableAvg = hasHistoricalData 
+    ? historicalVariableAvg 
+    : plannedBudgetVariable;
+
+  // Calcula projeção de gastos variáveis para os dias restantes
+  // Usando taxa diária histórica: (média / dias no mês) * dias restantes
+  const dailyVariableRate = daysInMonth > 0 ? effectiveVariableAvg / daysInMonth : 0;
   const projectedVariableRemaining = dailyVariableRate * daysRemaining;
 
-  // Total projected expenses
+  // Total de despesas projetadas
   const totalProjectedExpenses = pendingFixedExpenses + projectedVariableRemaining;
 
-  // Estimated end of month balance
+  // Saldo estimado ao final do mês
   const estimatedEndOfMonth = currentBalance - totalProjectedExpenses;
 
-  // Calculate safe spending zone (with safety buffer)
+  // Calcula zona de gasto seguro (com margem de segurança)
   const safetyBuffer = Math.abs(currentBalance) * (safetyBufferPercent / 100);
   const safeSpendingZone = Math.max(0, currentBalance - pendingFixedExpenses - safetyBuffer);
 
-  // Determine risk level
+  // Determina nível de risco
   let riskLevel: 'safe' | 'caution' | 'danger';
   if (estimatedEndOfMonth >= safetyBuffer) {
     riskLevel = 'safe';
@@ -145,8 +263,8 @@ export function computeFutureEngine(input: FutureEngineInput): FutureEngineResul
     riskLevel = 'danger';
   }
 
-  // Calculate risk percentage for progress bar
-  // 100% = fully safe, 0% = zero or negative balance
+  // Calcula percentual de risco para barra de progresso
+  // 100% = totalmente seguro, 0% = saldo zero ou negativo
   let riskPercentage: number;
   if (currentBalance <= 0) {
     riskPercentage = 0;
@@ -159,14 +277,14 @@ export function computeFutureEngine(input: FutureEngineInput): FutureEngineResul
   }
   riskPercentage = Math.max(0, Math.min(100, riskPercentage));
 
-  // Determine data sufficiency
-  const isDataSufficient = historicalVariableAvg > 0;
+  // Determina suficiência de dados: true se houver histórico OU se houver orçamento planejado
+  const isDataSufficient = hasHistoricalData || plannedBudgetVariable > 0;
   
-  // Confidence level based on data quality
+  // Nível de confiança baseado na qualidade dos dados
   let confidenceLevel: 'high' | 'medium' | 'low';
-  if (historicalVariableAvg > 0 && daysElapsed >= 7) {
+  if (hasHistoricalData && daysElapsed >= 7) {
     confidenceLevel = 'high';
-  } else if (historicalVariableAvg > 0 || daysElapsed >= 3) {
+  } else if (hasHistoricalData || (usingBudgetFallback && daysElapsed >= 3)) {
     confidenceLevel = 'medium';
   } else {
     confidenceLevel = 'low';
@@ -182,5 +300,6 @@ export function computeFutureEngine(input: FutureEngineInput): FutureEngineResul
     daysRemaining,
     isDataSufficient,
     confidenceLevel,
+    usingBudgetFallback,
   };
 }

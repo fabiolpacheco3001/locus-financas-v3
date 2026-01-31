@@ -128,7 +128,6 @@ export default function Dashboard() {
     
     return transactions.filter(t => {
       if (t.kind !== 'EXPENSE') return false;
-      if (t.expense_type !== 'fixed') return false;
       if (t.status !== 'planned') return false;
       if (!t.due_date) return false;
       

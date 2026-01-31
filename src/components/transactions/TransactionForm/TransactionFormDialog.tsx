@@ -204,27 +204,21 @@ export function TransactionFormDialog({
     }
   }, [open, editingId]);
 
-  // FIX: Auto-status based on date selection
+  // FIX: Sugestão de status baseada APENAS na data inicial ou mudança de tipo, 
+  // mas sem forçar se o usuário já interagiu.
+  // Simplificação: Vamos remover a auto-mudança para Cartão de Crédito.
   useEffect(() => {
     const todayStr = format(new Date(), 'yyyy-MM-dd');
     const isFutureDate = formDate > todayStr;
     
-    if (formKind === 'INCOME') {
-      setFormIsPlanned(false);
-      return;
+    // Apenas sugerimos "Pendente" se a data for futura e for Despesa/Receita
+    // Mas NÃO forçamos "Pago" para cartão de crédito, deixamos o estado atual.
+    if (isFutureDate && !formIsPlanned) {
+       // Sugestão suave: Se mudou para futuro, sugere pendente (pode ser removido se quiser total manual)
+       setFormIsPlanned(true);
     }
-    
-    if (formKind === 'EXPENSE' && formPaymentMethod === 'credit_card') {
-      setFormIsPlanned(false);
-      return;
-    }
-    
-    if (isFutureDate) {
-      setFormIsPlanned(true);
-    } else {
-      setFormIsPlanned(false);
-    }
-  }, [formDate, formPaymentMethod, formKind, setFormIsPlanned]);
+    // Se voltou para hoje/passado, NÃO mudamos automaticamente para não irritar o usuário que quer lançar pendente antigo.
+  }, [formDate]);
 
   const descriptionInputRef = useRef<HTMLInputElement>(null);
 
