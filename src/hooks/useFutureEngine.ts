@@ -1,30 +1,18 @@
 /**
  * useFutureEngine - Hook para projeção de saldo ao final do mês
  * 
- * Busca dados históricos, calcula projeções e retorna resultados memoizados.
- * Inclui fallback para orçamento planejado quando não há histórico suficiente.
+ * Usa RPC do PostgreSQL para calcular projeções diretamente no banco de dados.
+ * Reduz payload de centenas de transações para 1 único objeto JSON.
  */
 
-import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { 
-  computeFutureEngine, 
-  calculateDaysElapsed,
-  calculateDaysRemaining,
-  calculateHistoricalAverage,
-  type FutureEngineResult,
-  type HistoricalTransaction,
-} from '@/domain/finance/computeFutureEngine';
-import { 
-  startOfMonth, 
-  subMonths, 
-  endOfMonth, 
-  getDaysInMonth, 
-  format,
-  isSameMonth
-} from 'date-fns';
+import { format } from 'date-fns';
+import type { FutureEngineResult } from '@/domain/finance/computeFutureEngine';
+import { computeFutureEngine } from '@/domain/finance/computeFutureEngine';
+import { getDaysInMonth } from 'date-fns';
 
 // ============================================
 // TIPOS
@@ -34,14 +22,14 @@ export interface UseFutureEngineOptions {
   /** Mês atualmente selecionado */
   selectedMonth: Date;
   
-  /** Saldo disponível atual (de useAccountProjections) */
-  currentBalance: number;
+  /** @deprecated Não é mais necessário - calculado internamente pela RPC */
+  currentBalance?: number;
   
-  /** Despesas fixas pendentes para o mês */
-  pendingFixedExpenses: number;
+  /** @deprecated Não é mais necessário - calculado internamente pela RPC */
+  pendingFixedExpenses?: number;
   
-  /** Despesas variáveis confirmadas neste mês */
-  confirmedVariableThisMonth: number;
+  /** @deprecated Não é mais necessário - calculado internamente pela RPC */
+  confirmedVariableThisMonth?: number;
 }
 
 export interface UseFutureEngineResult extends FutureEngineResult {
@@ -55,6 +43,14 @@ export interface UseFutureEngineResult extends FutureEngineResult {
   historicalMonthsCount: number;
 }
 
+/**
+ * Tipo de retorno da RPC get_future_projection
+ */
+interface RPCFutureProjectionResult extends FutureEngineResult {
+  historicalVariableAvg: number;
+  historicalMonthsCount: number;
+}
+
 // ============================================
 // HOOK
 // ============================================
@@ -62,155 +58,116 @@ export interface UseFutureEngineResult extends FutureEngineResult {
 /**
  * Hook para calcular projeção de saldo ao final do mês
  * 
- * Busca dados históricos dos últimos 3 meses e calcula projeções usando:
- * - Média histórica de despesas variáveis
+ * Usa RPC do PostgreSQL para calcular projeções diretamente no banco:
+ * - Calcula internamente: currentBalance, pendingFixedExpenses, confirmedVariableThisMonth
+ * - Média histórica de despesas variáveis dos últimos 3 meses completos
  * - Fallback para orçamento planejado quando não há histórico
- * - Cálculo preciso de dias restantes usando dateOnly
+ * - Cálculo de dias restantes e projeção de gastos
  * 
- * @param options - Opções de configuração do hook
+ * Reduz payload de centenas de transações para 1 único objeto JSON.
+ * 
+ * @param options - Opções de configuração do hook (apenas selectedMonth necessário)
  * @returns Resultado da projeção com dados históricos e status de carregamento
  */
 export function useFutureEngine(options: UseFutureEngineOptions): UseFutureEngineResult {
-  const { selectedMonth, currentBalance, pendingFixedExpenses, confirmedVariableThisMonth } = options;
+  const { selectedMonth } = options;
   const { householdId } = useAuth();
 
-  // Calcula intervalo de datas para query histórica (últimos 3 meses, excluindo atual)
-  const historicalRange = useMemo(() => {
-    const endDate = endOfMonth(subMonths(selectedMonth, 1));
-    const startDate = startOfMonth(subMonths(selectedMonth, 3));
-    return {
-      start: format(startDate, 'yyyy-MM-dd'),
-      end: format(endDate, 'yyyy-MM-dd'),
-    };
-  }, [selectedMonth]);
+  // Formata data do mês selecionado para DATE (YYYY-MM-DD)
+  const selectedMonthDate = format(selectedMonth, 'yyyy-MM-dd');
 
-  // Busca despesas variáveis históricas (últimos 3 meses)
-  const { data: historicalData, isLoading: isLoadingHistory } = useQuery({
-    queryKey: ['future-engine-history', householdId, historicalRange.start, historicalRange.end],
-    queryFn: async (): Promise<HistoricalTransaction[]> => {
+  // Chama RPC para calcular projeção diretamente no banco
+  // A RPC calcula tudo internamente: currentBalance, pendingFixedExpenses, confirmedVariableThisMonth
+  const { data: rpcData, isLoading } = useQuery({
+    queryKey: [
+      'future-engine-projection',
+      householdId,
+      selectedMonthDate,
+    ],
+    queryFn: async (): Promise<any | null> => {
       if (!householdId) {
-        return [];
+        return null;
       }
 
-      const { data, error } = await supabase
-        .from('transactions')
-        .select('amount, date')
-        .eq('household_id', householdId)
-        .eq('kind', 'EXPENSE')
-        .eq('status', 'confirmed')
-        .eq('expense_type', 'variable')
-        .gte('date', historicalRange.start)
-        .lte('date', historicalRange.end)
-        .is('cancelled_at', null);
+      const { data, error } = await supabase.rpc('get_future_projection', {
+        p_household_id: householdId,
+        p_target_month: selectedMonthDate,
+      });
 
       if (error) {
-        console.error('Erro ao buscar dados históricos:', error);
-        return [];
+        console.error('Erro ao calcular projeção futura:', error);
+        return null;
       }
 
-      // Converte para formato esperado pela função de domínio
-      return (data || []).map((tx) => ({
-        date: tx.date,
-        amount: Number(tx.amount),
-      }));
+      // A RPC retorna um JSONB com os dados calculados
+      return data;
     },
     enabled: !!householdId,
     staleTime: 5 * 60 * 1000, // 5 minutos
   });
 
-  // Calcula ano e mês para buscar orçamento planejado
-  const budgetYear = selectedMonth.getFullYear();
-  const budgetMonth = selectedMonth.getMonth() + 1;
-
-  // Busca orçamento planejado para o mês (fallback quando não há histórico)
-  const { data: budgets = [], isLoading: isLoadingBudgets } = useQuery({
-    queryKey: ['future-engine-budgets', householdId, budgetYear, budgetMonth],
-    queryFn: async () => {
-      if (!householdId) {
-        return [];
-      }
-
-      const { data, error } = await supabase
-        .from('budgets')
-        .select('planned_amount')
-        .eq('household_id', householdId)
-        .eq('year', budgetYear)
-        .eq('month', budgetMonth);
-
-      if (error) {
-        console.error('Erro ao buscar orçamentos:', error);
-        return [];
-      }
-
-      return data || [];
-    },
-    enabled: !!householdId,
-    staleTime: 5 * 60 * 1000, // 5 minutos
-  });
-
-  // Calcula total de orçamento planejado (soma de todos os budgets)
-  // Nota: Idealmente deveria filtrar apenas budgets de despesas variáveis,
-  // mas como não há essa informação direta, usamos o total como fallback
-  const plannedBudgetVariable = useMemo(() => {
-    return budgets.reduce((sum, budget) => sum + Number(budget.planned_amount), 0);
-  }, [budgets]);
-
-  // Calcula média histórica usando função pura do domínio
-  const { average: historicalVariableAvg, monthsCount: historicalMonthsCount } = useMemo(() => {
-    return calculateHistoricalAverage(historicalData || []);
-  }, [historicalData]);
-
-  // Calcula entradas baseadas em tempo
-  const { daysElapsed, daysInMonth, daysRemaining } = useMemo(() => {
-    const today = new Date();
-    const isCurrentMonth = isSameMonth(selectedMonth, today);
-    
-    const totalDays = getDaysInMonth(selectedMonth);
-    
-    if (!isCurrentMonth) {
-      // Para meses passados/futuros, mostra projeção do mês completo
-      return {
-        daysElapsed: totalDays,
-        daysInMonth: totalDays,
-        daysRemaining: 0,
-      };
+  // Processa os dados da RPC usando computeFutureEngine dentro de useMemo
+  const projection = useMemo(() => {
+    if (!rpcData) {
+      return null;
     }
 
-    return {
-      daysElapsed: calculateDaysElapsed(selectedMonth, today),
-      daysInMonth: totalDays,
-      daysRemaining: calculateDaysRemaining(selectedMonth, today),
-    };
-  }, [selectedMonth]);
-
-  // Calcula projeção do future engine
-  const projection = useMemo(() => {
-    return computeFutureEngine({
-      currentBalance,
-      pendingFixedExpenses,
-      confirmedVariableThisMonth,
-      historicalVariableAvg,
-      daysElapsed,
+    // Extrai dados necessários da RPC para chamar computeFutureEngine
+    const daysInMonth = getDaysInMonth(selectedMonth);
+    const daysElapsed = daysInMonth - (rpcData.daysRemaining || 0);
+    
+    // Prepara dados para computeFutureEngine
+    // A RPC já calcula tudo, mas chamamos computeFutureEngine para garantir formato correto
+    const rpcInput = {
+      currentBalance: rpcData.currentBalance ?? 0,
+      pendingFixedExpenses: rpcData.pendingFixedExpenses ?? 0,
+      confirmedVariableThisMonth: rpcData.confirmedVariableThisMonth ?? 0,
+      historicalVariableAvg: rpcData.historicalVariableAvg ?? 0,
+      daysElapsed: Math.max(1, daysElapsed),
       daysInMonth,
-      plannedBudgetVariable,
-    });
-  }, [
-    currentBalance,
-    pendingFixedExpenses,
-    confirmedVariableThisMonth,
-    historicalVariableAvg,
-    daysElapsed,
-    daysInMonth,
-    plannedBudgetVariable,
-  ]);
+      // A RPC já usa plannedBudgetVariable internamente, mas não retorna no JSONB
+      // Usamos 0 aqui porque a RPC já considerou isso no cálculo de effectiveVariableAvg
+      plannedBudgetVariable: 0,
+    };
+    
+    // Chama computeFutureEngine com os dados da RPC
+    const computedResult = computeFutureEngine(rpcInput);
 
-  const isLoading = isLoadingHistory || isLoadingBudgets;
+    // Retorna resultado combinando dados da RPC com resultado computado
+    // Garante que todos os campos de UseFutureEngineResult estejam presentes
+    return {
+      ...computedResult,
+      historicalVariableAvg: rpcData.historicalVariableAvg ?? 0,
+      historicalMonthsCount: rpcData.historicalMonthsCount ?? 0,
+      // Garante que riskLevel e confidenceLevel estejam presentes (sempre retornados por computeFutureEngine)
+      riskLevel: computedResult.riskLevel,
+      confidenceLevel: computedResult.confidenceLevel,
+    } as RPCFutureProjectionResult;
+  }, [rpcData, selectedMonth]);
+
+  // Retorna resultado padrão enquanto carrega ou se não houver dados
+  const defaultResult: UseFutureEngineResult = {
+    estimatedEndOfMonth: 0,
+    safeSpendingZone: 0,
+    riskLevel: 'safe',
+    riskPercentage: 0,
+    projectedVariableRemaining: 0,
+    totalProjectedExpenses: 0,
+    daysRemaining: 0,
+    isDataSufficient: false,
+    confidenceLevel: 'low',
+    usingBudgetFallback: false,
+    isLoading: isLoading,
+    historicalVariableAvg: 0,
+    historicalMonthsCount: 0,
+  };
+
+  if (!projection) {
+    return defaultResult;
+  }
 
   return {
     ...projection,
     isLoading,
-    historicalVariableAvg,
-    historicalMonthsCount,
-    daysRemaining,
   };
 }

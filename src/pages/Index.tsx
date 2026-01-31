@@ -86,23 +86,9 @@ export default function Dashboard() {
   });
 
   // Future Engine - End of Month Projection
-  const pendingFixedExpenses = useMemo(() => {
-    return transactions
-      .filter(t => t.kind === 'EXPENSE' && t.expense_type === 'fixed' && t.status === 'planned')
-      .reduce((sum, t) => sum + Number(t.amount), 0);
-  }, [transactions]);
-
-  const confirmedVariableThisMonth = useMemo(() => {
-    return transactions
-      .filter(t => t.kind === 'EXPENSE' && t.expense_type === 'variable' && t.status === 'confirmed')
-      .reduce((sum, t) => sum + Number(t.amount), 0);
-  }, [transactions]);
-
+  // Agora calculado internamente pela RPC get_future_projection
   const futureEngine = useFutureEngine({
     selectedMonth,
-    currentBalance: totals.availableRealizedBalance,
-    pendingFixedExpenses,
-    confirmedVariableThisMonth,
   });
 
   // Calculate total budget planned and used

@@ -46,7 +46,7 @@ interface FutureEngineWidgetProps {
 // HELPER COMPONENTS
 // ============================================
 
-function RiskBadge({ riskLevel }: { riskLevel: 'safe' | 'caution' | 'danger' }) {
+function RiskBadge({ riskLevel }: { riskLevel?: 'safe' | 'caution' | 'danger' }) {
   const { t } = useLocale();
   
   const config = {
@@ -70,7 +70,7 @@ function RiskBadge({ riskLevel }: { riskLevel: 'safe' | 'caution' | 'danger' }) 
     },
   };
 
-  const { variant, className, icon: Icon, label } = config[riskLevel];
+  const { variant, className, icon: Icon, label } = config[riskLevel || 'safe'] || config.safe;
 
   return (
     <Badge variant={variant} className={cn('gap-1', className)}>
@@ -126,7 +126,7 @@ function GradientProgressBar({
   );
 }
 
-function ConfidenceBadge({ level }: { level: 'high' | 'medium' | 'low' }) {
+function ConfidenceBadge({ level }: { level?: 'high' | 'medium' | 'low' }) {
   const { t } = useLocale();
   
   const config = {
@@ -135,7 +135,7 @@ function ConfidenceBadge({ level }: { level: 'high' | 'medium' | 'low' }) {
     low: { icon: Info, color: 'text-muted-foreground' },
   };
 
-  const { icon: Icon, color } = config[level];
+  const { icon: Icon, color } = config[level || 'low'] || config.low;
 
   return (
     <TooltipProvider>
@@ -211,7 +211,7 @@ export function FutureEngineWidget({ data, className }: FutureEngineWidgetProps)
             </div>
             {/* Right badges - hidden on mobile for cleaner layout */}
             <div className="hidden items-center gap-2 sm:flex">
-              <ConfidenceBadge level={confidenceLevel} />
+              <ConfidenceBadge level={confidenceLevel || 'low'} />
               <Badge variant="outline" className="gap-1 text-xs border-primary/30 text-primary bg-primary/5">
                 <Zap className="h-3 w-3" />
                 {t('futureEngine.syncBadge')}
@@ -240,7 +240,7 @@ export function FutureEngineWidget({ data, className }: FutureEngineWidgetProps)
                 </p>
               )}
             </div>
-            <RiskBadge riskLevel={riskLevel} />
+            <RiskBadge riskLevel={riskLevel || 'safe'} />
           </div>
 
           {/* Safe Spending Zone Bar */}
@@ -250,16 +250,16 @@ export function FutureEngineWidget({ data, className }: FutureEngineWidgetProps)
               <span 
                 className={cn(
                   "font-semibold",
-                  riskLevel === 'safe' && "text-success",
-                  riskLevel === 'caution' && "text-warning",
-                  riskLevel === 'danger' && "text-destructive"
+                  (riskLevel || 'safe') === 'safe' && "text-success",
+                  (riskLevel || 'safe') === 'caution' && "text-warning",
+                  (riskLevel || 'safe') === 'danger' && "text-destructive"
                 )}
                 data-testid="future-engine-risk-indicator"
               >
                 {formatCurrency(safeSpendingZone)} {t('futureEngine.availableToSpend')}
               </span>
             </div>
-            <GradientProgressBar percentage={riskPercentage} riskLevel={riskLevel} />
+            <GradientProgressBar percentage={riskPercentage} riskLevel={riskLevel || 'safe'} />
           </div>
 
           {/* Breakdown */}
