@@ -169,11 +169,11 @@ export function TransactionFormDialog({
   setFormPaymentMethod,
   formCreditCardId,
   setFormCreditCardId,
-  accounts,
-  selectableCategories,
-  selectableSubcategories,
-  members,
-  creditCards,
+  accounts = [],
+  selectableCategories = [],
+  selectableSubcategories = [],
+  members = [],
+  creditCards = [],
   budgetWarning,
   descriptionSuggestions,
   categorySuggestion,
@@ -395,7 +395,7 @@ export function TransactionFormDialog({
             {/* DESCRIÇÃO E CHIPS */}
             <div className="space-y-3">
               <SmartDescriptionInput
-                value={formDescription}
+                value={formDescription || ""}
                 onChange={setFormDescription}
                 onPredictionSelect={handlePredictionSelect}
                 memberId={formMemberId}
@@ -406,7 +406,7 @@ export function TransactionFormDialog({
               <QuickChips 
                 onSelect={setFormDescription}
                 onSelectComplete={handleQuickChipSelect}
-                currentValue={formDescription}
+                currentValue={formDescription || ""}
               />
             </div>
 

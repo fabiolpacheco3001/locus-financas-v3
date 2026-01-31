@@ -36,7 +36,24 @@ export function SmartDescriptionInput({
   disabled,
   inputRef: externalInputRef,
 }: SmartDescriptionInputProps) {
+  // ===== HOOKS (TODOS NO INÍCIO) =====
   const { t } = useLocale();
+  
+  // Get prediction from RPC
+  const { prediction = null, hasPrediction = false, isLoading = false } = usePredictTransaction({
+    description: value || '',
+    enabled: value ? value.length >= 2 : false,
+  });
+
+  // Get description suggestions from history
+  const { suggestions = [] } = useDescriptionSuggestions({
+    memberId,
+    accountId,
+    categoryId,
+    searchTerm: value || '',
+  });
+
+  // ===== ESTADOS E REFS =====
   const [open, setOpen] = useState(false);
   const internalInputRef = useRef<HTMLInputElement>(null);
   const inputRef = externalInputRef || internalInputRef;
@@ -45,6 +62,7 @@ export function SmartDescriptionInput({
   const categoryProtectionUntil = useRef<number>(0);
   const lastCategoryId = useRef<string | undefined>(categoryId);
   
+  // ===== EFFECTS =====
   // Detect manual category changes and apply 5-second protection
   useEffect(() => {
     if (categoryId && categoryId !== lastCategoryId.current) {
@@ -54,28 +72,16 @@ export function SmartDescriptionInput({
     lastCategoryId.current = categoryId;
   }, [categoryId]);
 
-  // Get prediction from RPC
-  const { prediction, hasPrediction, isLoading } = usePredictTransaction({
-    description: value,
-    enabled: value.length >= 2,
-  });
-
-  // Get description suggestions from history
-  const { suggestions } = useDescriptionSuggestions({
-    memberId,
-    accountId,
-    categoryId,
-    searchTerm: value,
-  });
-
   // Open popover when typing and there are suggestions
   useEffect(() => {
-    if (value.length >= 2 && (suggestions.length > 0 || hasPrediction)) {
+    const safeSuggestions = Array.isArray(suggestions) ? suggestions : [];
+    const hasValue = value && value.length >= 2;
+    if (hasValue && (safeSuggestions.length > 0 || hasPrediction)) {
       setOpen(true);
     } else {
       setOpen(false);
     }
-  }, [value, suggestions.length, hasPrediction]);
+  }, [value, suggestions, hasPrediction]);
 
   const handleSelect = (selectedDescription: string) => {
     onChange(selectedDescription);
@@ -103,13 +109,14 @@ export function SmartDescriptionInput({
       setOpen(false);
     }
     // Let Enter propagate if popover is closed
-    if (e.key === 'Enter' && open && (suggestions.length > 0 || hasPrediction)) {
+    const safeSuggestions = Array.isArray(suggestions) ? suggestions : [];
+    if (e.key === 'Enter' && open && (safeSuggestions.length > 0 || hasPrediction)) {
       e.preventDefault();
       // Select first suggestion
       if (hasPrediction && prediction?.description) {
         handleSelect(prediction.description);
-      } else if (suggestions.length > 0) {
-        handleSelect(suggestions[0]);
+      } else if (safeSuggestions.length > 0) {
+        handleSelect(safeSuggestions[0]);
       }
     }
   };
@@ -125,7 +132,9 @@ export function SmartDescriptionInput({
             onChange={(e) => onChange(e.target.value)}
             onKeyDown={handleKeyDown}
             onFocus={() => {
-              if (value.length >= 2 && (suggestions.length > 0 || hasPrediction)) {
+              const safeSuggestions = Array.isArray(suggestions) ? suggestions : [];
+              const hasValue = value && value.length >= 2;
+              if (hasValue && (safeSuggestions.length > 0 || hasPrediction)) {
                 setOpen(true);
               }
             }}
@@ -173,7 +182,7 @@ export function SmartDescriptionInput({
             )}
 
             {/* Recent Descriptions */}
-            {suggestions.length > 0 && (
+            {Array.isArray(suggestions) && suggestions.length > 0 && (
               <CommandGroup heading={t('transactions.recentDescriptions')}>
                 {suggestions
                   .filter(s => s !== prediction?.description) // Don't duplicate the prediction
@@ -191,7 +200,7 @@ export function SmartDescriptionInput({
               </CommandGroup>
             )}
 
-            {!hasPrediction && suggestions.length === 0 && (
+            {!hasPrediction && (!Array.isArray(suggestions) || suggestions.length === 0) && (
               <CommandEmpty>{t('common.noResults')}</CommandEmpty>
             )}
           </CommandList>

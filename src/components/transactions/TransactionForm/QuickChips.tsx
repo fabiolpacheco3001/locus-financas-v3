@@ -53,8 +53,9 @@ export function QuickChips({ onSelect, onSelectComplete, currentValue }: QuickCh
 
   const chips = useMemo(() => {
     // Filter out current value if already typed
+    const searchTerm = (currentValue || "").trim().toLowerCase();
     return frequentDescriptions.filter(d => 
-      d.toLowerCase() !== currentValue.toLowerCase().trim()
+      (d || "").toLowerCase() !== searchTerm
     ).slice(0, 4);
   }, [frequentDescriptions, currentValue]);
 

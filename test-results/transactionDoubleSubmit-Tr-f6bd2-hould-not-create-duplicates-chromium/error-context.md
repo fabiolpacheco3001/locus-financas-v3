@@ -1,0 +1,41 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - region "Notifications (F8)":
+    - list
+  - region "Notifications alt+T"
+  - generic [ref=e10]:
+    - generic [ref=e11]:
+      - img [ref=e13]
+      - heading "Locus Finanças" [level=1] [ref=e15]
+      - paragraph [ref=e16]: O futuro das suas finanças começa aqui
+    - generic [ref=e18]:
+      - button "Continue with Google" [ref=e19] [cursor=pointer]:
+        - img
+        - text: Continue with Google
+      - generic [ref=e23]: or continue with
+      - generic [ref=e25]:
+        - tablist [ref=e26]:
+          - tab "Sign in" [selected] [ref=e27] [cursor=pointer]
+          - tab "Sign up" [ref=e28] [cursor=pointer]
+        - tabpanel "Sign in" [ref=e29]:
+          - generic [ref=e30]:
+            - generic [ref=e31]:
+              - text: Email
+              - textbox "Email" [ref=e33]:
+                - /placeholder: seu@email.com
+                - text: test@example.com
+            - generic [ref=e34]:
+              - text: Password
+              - textbox "Password" [ref=e36]:
+                - /placeholder: ••••••••
+                - text: Test1234!
+            - button "Sign in" [ref=e37] [cursor=pointer]
+      - combobox [ref=e40] [cursor=pointer]:
+        - generic [ref=e41]:
+          - img [ref=e42]
+          - generic: English
+        - img [ref=e45]
+    - paragraph [ref=e47]: © 2025 Locus Finanças. Todos os direitos reservados.
+```

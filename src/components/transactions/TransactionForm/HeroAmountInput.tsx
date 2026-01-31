@@ -61,13 +61,17 @@ export function isValidAmount(value: number | undefined): boolean {
 const HeroAmountInput = React.forwardRef<HTMLInputElement, HeroAmountInputProps>(
   ({ className, value, onChange, currencySymbol = "R$", placeholder = "0,00", onBlur, ...props }, ref) => {
     const [displayValue, setDisplayValue] = React.useState<string>(() => 
-      value !== undefined && value !== 0 ? formatToBRL(value) : ""
+      typeof value === 'number' && !isNaN(value) && value !== 0 ? formatToBRL(value) : ""
     );
     const [isEditing, setIsEditing] = React.useState(false);
 
     React.useEffect(() => {
       if (!isEditing) {
-        setDisplayValue(value !== undefined && value !== 0 ? formatToBRL(value) : "");
+        if (typeof value === 'number' && !isNaN(value)) {
+          setDisplayValue(value !== 0 ? formatToBRL(value) : "");
+        } else {
+          setDisplayValue("");
+        }
       }
     }, [value, isEditing]);
 
@@ -81,15 +85,17 @@ const HeroAmountInput = React.forwardRef<HTMLInputElement, HeroAmountInputProps>
 
     const handleFocus = () => {
       setIsEditing(true);
-      if (value !== undefined && value !== 0) {
+      if (typeof value === 'number' && !isNaN(value) && value !== 0) {
         setDisplayValue(value.toFixed(2).replace(".", ","));
+      } else {
+        setDisplayValue("");
       }
     };
 
     const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
       setIsEditing(false);
       const numValue = parseToNumber(displayValue);
-      if (numValue !== undefined && numValue !== 0) {
+      if (typeof numValue === 'number' && numValue !== 0) {
         setDisplayValue(formatToBRL(numValue));
       } else {
         setDisplayValue("");
@@ -120,7 +126,7 @@ const HeroAmountInput = React.forwardRef<HTMLInputElement, HeroAmountInputProps>
           onFocus={handleFocus}
           onBlur={handleBlur}
           placeholder={placeholder}
-          data-testid="hero-amount-input"
+          data-testid="form-amount"
           aria-label="Transaction amount"
           {...props}
         />

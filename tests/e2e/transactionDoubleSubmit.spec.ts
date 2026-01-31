@@ -8,17 +8,33 @@ import { test, expect } from '@playwright/test';
  */
 test.describe('Transaction Double-Submit Protection', () => {
   test.beforeEach(async ({ page }) => {
+    // 1. Tenta acessar a área protegida
     await page.goto('/transactions');
     
-    // Login if needed
-    const loginButton = page.getByRole('button', { name: /entrar|login|sign in/i });
-    if (await loginButton.isVisible({ timeout: 2000 }).catch(() => false)) {
-      await page.getByLabel(/email/i).fill('test@example.com');
+    // 2. Verifica se caiu na Landing Page (Botão "Já tenho conta? Entrar")
+    // Usamos um seletor mais específico para evitar confusão com outros botões
+    const landingLoginButton = page.getByRole('button', { name: /entrar|login|sign in/i }).first();
+    
+    if (await landingLoginButton.isVisible({ timeout: 5000 }).catch(() => false)) {
+      // CLIQUE IMPORTANTE: Abre o modal/página de login
+      await landingLoginButton.click();
+      
+      // 3. Aguarda explicitamente os campos aparecerem antes de digitar
+      const emailInput = page.getByLabel(/email/i);
+      await emailInput.waitFor({ state: 'visible', timeout: 10000 });
+      
+      // 4. Preenche e entra
+      await emailInput.fill('test@example.com');
       await page.getByLabel(/senha|password/i).fill('Test1234!');
-      await loginButton.click();
-      await page.waitForURL('**/transactions**', { timeout: 10000 });
+      
+      // Clica no botão de submeter o formulário (pode ser diferente do botão da landing)
+      await page.getByRole('button', { name: /entrar|login|sign in/i }).last().click();
+      
+      // 5. Aguarda chegar na página de transações
+      await page.waitForURL('**/transactions**', { timeout: 15000 });
     }
     
+    // Estabilização final
     await page.waitForTimeout(1000);
   });
 
